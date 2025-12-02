@@ -1,11 +1,11 @@
 package internal.entities;
 
 import internal.enums.OrderStatus;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 
+import java.util.List;
+
+@Entity
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
@@ -17,6 +17,18 @@ public class Product {
     private Double price;
     private OrderStatus orderStatus;
     private Long quantity;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderProduct> order_product;
+
+    public Product(String name, String description, Double price, OrderStatus orderStatus, Long quantity, List<OrderProduct> order_product) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.orderStatus = orderStatus;
+        this.quantity = quantity;
+        this.order_product = order_product;
+    }
 
     public Product(String name, String description, Double price, OrderStatus orderStatus, Long quantity) {
         this.name = name;
@@ -77,6 +89,14 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public List<OrderProduct> getOrder_product() {
+        return order_product;
+    }
+
+    public void setOrder_product(List<OrderProduct> order_product) {
+        this.order_product = order_product;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -86,6 +106,7 @@ public class Product {
                 ", price=" + price +
                 ", orderStatus=" + orderStatus +
                 ", quantity=" + quantity +
+                ", order_product=" + order_product +
                 '}';
     }
 }

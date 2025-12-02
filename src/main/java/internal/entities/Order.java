@@ -4,6 +4,8 @@ import internal.enums.OrderStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Order {
@@ -24,4 +26,107 @@ public class Order {
     private Double total_sum;
     private long shipping_charge;
     private OrderStatus orderStatus;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderProduct> items = new ArrayList<>();
+
+    public Order() {
+    }
+
+    public Order(Customer customer, Address address, LocalDate date, Double total_sum, long shipping_charge, OrderStatus orderStatus, List<OrderProduct> items) {
+        this.customer = customer;
+        this.address = address;
+        this.date = date;
+        this.total_sum = total_sum;
+        this.shipping_charge = shipping_charge;
+        this.orderStatus = orderStatus;
+        this.items = items;
+    }
+
+    public Order(Customer customer, Address address, LocalDate date, Double total_sum, long shipping_charge, OrderStatus orderStatus) {
+        this.customer = customer;
+        this.address = address;
+        this.date = date;
+        this.total_sum = total_sum;
+        this.shipping_charge = shipping_charge;
+        this.orderStatus = orderStatus;
+    }
+
+    public long getOrder_id() {
+        return order_id;
+    }
+
+    public void setOrder_id(long order_id) {
+        this.order_id = order_id;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public Double getTotal_sum() {
+        return total_sum;
+    }
+
+    public void setTotal_sum(Double total_sum) {
+        this.total_sum = total_sum;
+    }
+
+    public long getShipping_charge() {
+        return shipping_charge;
+    }
+
+    public void setShipping_charge(long shipping_charge) {
+        this.shipping_charge = shipping_charge;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public List<OrderProduct> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderProduct> items) {
+        this.items = items;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "order_id=" + order_id +
+                ", customer=" + customer +
+                ", address=" + address +
+                ", date=" + date +
+                ", total_sum=" + total_sum +
+                ", shipping_charge=" + shipping_charge +
+                ", orderStatus=" + orderStatus +
+                ", items=" + items +
+                '}';
+    }
 }
