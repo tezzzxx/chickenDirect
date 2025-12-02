@@ -38,7 +38,7 @@ CREATE TABLE address(
 )
 
 CREATE TABLE order_product(
-    order_product BIGINT PRIMARY KEY,
+    order_product_id BIGINT PRIMARY KEY,
     order_id BIGINT,
     product_id BIGINT,
     quantity INT,

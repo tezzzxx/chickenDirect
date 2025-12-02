@@ -17,16 +17,16 @@ public class OrderProduct {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private long quntity;
-    private long unit_price;
+    private int quantity;
+    private int unit_price;
 
     public OrderProduct() {
     }
 
-    public OrderProduct(Order order, Product product, long quntity, long unit_price) {
+    public OrderProduct(Order order, Product product, int quantity, int unit_price) {
         this.order = order;
         this.product = product;
-        this.quntity = quntity;
+        this.quantity = quantity;
         this.unit_price = unit_price;
     }
 
@@ -54,19 +54,19 @@ public class OrderProduct {
         this.product = product;
     }
 
-    public long getQuntity() {
-        return quntity;
+    public long getQuantity() {
+        return quantity;
     }
 
-    public void setQuntity(long quntity) {
-        this.quntity = quntity;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public long getUnit_price() {
         return unit_price;
     }
 
-    public void setUnit_price(long unit_price) {
+    public void setUnit_price(int unit_price) {
         this.unit_price = unit_price;
     }
 
@@ -76,7 +76,7 @@ public class OrderProduct {
                 "order_product_id=" + order_product_id +
                 ", order=" + order +
                 ", product=" + product +
-                ", quntity=" + quntity +
+                ", quantity=" + quantity +
                 ", unit_price=" + unit_price +
                 '}';
     }

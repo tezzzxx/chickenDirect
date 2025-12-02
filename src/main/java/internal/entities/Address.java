@@ -1,9 +1,9 @@
 package internal.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import internal.entities.Customer;
-
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Address {
@@ -12,19 +12,19 @@ public class Address {
     @SequenceGenerator(name = "address_seq", sequenceName = "address_seq", allocationSize = 1)
     private long address_id;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @ManyToMany (mappedBy = "address")
+    @JsonIgnoreProperties("address")
+    private List<Customer> customers;
 
-    private String apartment_Number;
+    private String apartment_number;
     private String address;
     private String zip_code;
     private String city;
     private String country;
 
-    public Address(Customer customer, String apartment_Number, String address, String zip_code, String city, String country) {
-        this.customer = customer;
-        this.apartment_Number = apartment_Number;
+    public Address(List<Customer> customers, String apartment_number, String address, String zip_code, String city, String country) {
+        this.customers = customers;
+        this.apartment_number = apartment_number;
         this.address = address;
         this.zip_code = zip_code;
         this.city = city;
@@ -42,20 +42,20 @@ public class Address {
         this.address_id = address_id;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public List<Customer> getCustomers() {
+        return customers;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
     }
 
-    public String getApartment_Number() {
-        return apartment_Number;
+    public String getApartment_number() {
+        return apartment_number;
     }
 
-    public void setApartment_Number(String apartment_Number) {
-        this.apartment_Number = apartment_Number;
+    public void setApartment_number(String apartment_number) {
+        this.apartment_number = apartment_number;
     }
 
     public String getAddress() {
@@ -94,8 +94,8 @@ public class Address {
     public String toString() {
         return "Address{" +
                 "address_id=" + address_id +
-                ", customer=" + customer +
-                ", apartment_Number='" + apartment_Number + '\'' +
+                ", customers=" + customers +
+                ", apartment_number='" + apartment_number + '\'' +
                 ", address='" + address + '\'' +
                 ", zip_code='" + zip_code + '\'' +
                 ", city='" + city + '\'' +

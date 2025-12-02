@@ -1,6 +1,9 @@
 package internal.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Customer {
@@ -13,10 +16,21 @@ public class Customer {
     private String phoneNumber;
     private String email;
 
-    public Customer(String name, String phoneNumber, String email) {
+    @ManyToMany
+    @JoinTable(
+            name = "customer_address",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id")
+    )
+    @JsonIgnoreProperties("customer")
+    private List<Address> addressList;
+
+
+    public Customer(String name, String phoneNumber, String email, List<Address> addressList) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.addressList = addressList;
     }
 
     public Customer() {
@@ -54,13 +68,22 @@ public class Customer {
         this.email = email;
     }
 
+    public List<Address> getAddressList() {
+        return addressList;
+    }
+
+    public void setAddressList(List<Address> addressList) {
+        this.addressList = addressList;
+    }
+
     @Override
     public String toString() {
-        return "customer{" +
+        return "Customer{" +
                 "customer_id=" + customer_id +
                 ", name='" + name + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", email='" + email + '\'' +
+                ", addressList=" + addressList +
                 '}';
     }
 }
