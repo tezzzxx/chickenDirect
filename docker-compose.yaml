@@ -5,6 +5,6 @@ services:
     ports:
       - '5432:5432'
     environment:
-      - POSTGRES_DB=appdb
+      - POSTGRES_DB=chickenDirect
       - POSTGRES_USER=appuser
       - POSTGRES_PASSWORD=pirate
