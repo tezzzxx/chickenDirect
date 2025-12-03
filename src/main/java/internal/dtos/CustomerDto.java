@@ -1,8 +1,14 @@
 package internal.dtos;
 
-public class CustomerDto {
+import internal.entities.Address;
 
-  String name;
-  String phoneNumber;
-  String email;
+import java.util.List;
+
+public record CustomerDto(
+        String name,
+        String phoneNumber,
+        String email,
+        List<Address> addressList
+)
+{
 }

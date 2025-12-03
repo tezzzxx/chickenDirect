@@ -12,18 +12,26 @@ public class Address {
     @SequenceGenerator(name = "address_seq", sequenceName = "address_seq", allocationSize = 1)
     private long address_id;
 
-    @ManyToMany (mappedBy = "address")
-    @JsonIgnoreProperties("address")
-    private List<Customer> customers;
-
     private String apartment_number;
     private String address;
     private String zip_code;
     private String city;
     private String country;
 
-    public Address(List<Customer> customers, String apartment_number, String address, String zip_code, String city, String country) {
-        this.customers = customers;
+    @ManyToMany (mappedBy = "address")
+    @JsonIgnoreProperties("address")
+    private List<Customer> customerList;
+
+    public Address(String apartment_number, String address, String zip_code, String city, String country, List<Customer> customerList) {
+        this.apartment_number = apartment_number;
+        this.address = address;
+        this.zip_code = zip_code;
+        this.city = city;
+        this.country = country;
+        this.customerList = customerList;
+    }
+
+    public Address(List<Customer> customerList, String apartment_number, String address, String zip_code, String city, String country) {
         this.apartment_number = apartment_number;
         this.address = address;
         this.zip_code = zip_code;
@@ -42,12 +50,12 @@ public class Address {
         this.address_id = address_id;
     }
 
-    public List<Customer> getCustomers() {
-        return customers;
+    public List<Customer> getCustomerList() {
+        return customerList;
     }
 
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
+    public void setCustomerList(List<Customer> customers) {
+        this.customerList = customers;
     }
 
     public String getApartment_number() {
@@ -94,12 +102,12 @@ public class Address {
     public String toString() {
         return "Address{" +
                 "address_id=" + address_id +
-                ", customers=" + customers +
                 ", apartment_number='" + apartment_number + '\'' +
                 ", address='" + address + '\'' +
                 ", zip_code='" + zip_code + '\'' +
                 ", city='" + city + '\'' +
                 ", country='" + country + '\'' +
+                ", customerList=" + customerList +
                 '}';
     }
 }

@@ -36,6 +36,7 @@ public class Customer {
     public Customer() {
     }
 
+
     public long getCustomer_id() {
         return customer_id;
     }

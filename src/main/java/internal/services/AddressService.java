@@ -17,7 +17,8 @@ public class AddressService {
     }
 
     public Address createAddress(AddressDto addressDto){
-
+        var newAddress = new Address(addressDto.apartment_number(),addressDto.address(),addressDto.zip_code(),addressDto.city(),addressDto.country(),addressDto.customerList());
+        return addressRepo.save(newAddress);
     }
 
     public Address findAddressById(long id){

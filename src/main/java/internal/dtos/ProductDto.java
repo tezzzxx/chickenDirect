@@ -1,4 +1,4 @@
 package internal.dtos;
 
-public class ProductDto {
+public record ProductDto() {
 }

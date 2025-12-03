@@ -1,5 +1,6 @@
 package internal.services;
 
+import internal.dtos.CustomerDto;
 import internal.entities.Customer;
 import internal.repos.CustomerRepo;
 
@@ -22,7 +23,6 @@ public class CustomerService {
         return customerRepo.findById(id).orElse(null);
     }
 
-
     public void deleteCustomerById(long id){
         customerRepo.deleteById(id);
     }
@@ -42,7 +42,8 @@ public class CustomerService {
         return customerRepo.saveAll(validCustomers);
     }
 
-
-
-
+    public Customer createCustomer(CustomerDto customerDto){
+        var newCustomer = new Customer(customerDto.name(), customerDto.phoneNumber(), customerDto.email(), customerDto.addressList());
+        return customerRepo.save(newCustomer);
+    }
 }

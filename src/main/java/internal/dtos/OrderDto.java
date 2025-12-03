@@ -1,4 +1,4 @@
 package internal.dtos;
 
-public class OrderDto {
+public record OrderDto() {
 }
