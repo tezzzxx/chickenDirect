@@ -1,6 +1,6 @@
 package internal.entities;
 
-import internal.enums.OrderStatus;
+import internal.enums.ProductStatus;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,26 +15,26 @@ public class Product {
     private String name;
     private String description;
     private Double price;
-    private OrderStatus orderStatus;
+    private ProductStatus productStatus;
     private Long quantity;
 
     @OneToMany(mappedBy = "product")
     private List<OrderProduct> order_product;
 
-    public Product(String name, String description, Double price, OrderStatus orderStatus, Long quantity, List<OrderProduct> order_product) {
+    public Product(String name, String description, Double price, ProductStatus productStatus, Long quantity, List<OrderProduct> order_product) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.orderStatus = orderStatus;
+        this.productStatus = productStatus;
         this.quantity = quantity;
         this.order_product = order_product;
     }
 
-    public Product(String name, String description, Double price, OrderStatus orderStatus, Long quantity) {
+    public Product(String name, String description, Double price, ProductStatus productStatus, Long quantity) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.orderStatus = orderStatus;
+        this.productStatus = productStatus;
         this.quantity = quantity;
     }
 
@@ -73,12 +73,12 @@ public class Product {
         this.price = price;
     }
 
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
+    public ProductStatus getProductStatus() {
+        return productStatus;
     }
 
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
+    public void setProductStatus(ProductStatus orderStatus) {
+        this.productStatus = orderStatus;
     }
 
     public Long getQuantity() {
@@ -104,7 +104,7 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
-                ", orderStatus=" + orderStatus +
+                ", productStatus=" + productStatus +
                 ", quantity=" + quantity +
                 ", order_product=" + order_product +
                 '}';

@@ -3,10 +3,14 @@ package internal.services;
 import internal.dtos.CustomerDto;
 import internal.entities.Customer;
 import internal.repos.CustomerRepo;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
 
+@Service
 public class CustomerService {
 
     private final CustomerRepo customerRepo;
@@ -15,15 +19,30 @@ public class CustomerService {
         this.customerRepo = customerRepo;
     }
 
+    public Customer createCustomer(CustomerDto customerDto){
+        var newCustomer = new Customer(
+                customerDto.name(),
+                customerDto.phoneNumber(),
+                customerDto.email(),
+                customerDto.addressList()
+        );
+        return customerRepo.save(newCustomer);
+    }
+
     public List<Customer> findAllCustomers(){
         return customerRepo.findAll();
     }
 
     public Customer findCustomerById(long id){
-        return customerRepo.findById(id).orElse(null);
+        return customerRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Customer not found with id " + id));
     }
 
     public void deleteCustomerById(long id){
+        if (!customerRepo.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found with id " + id);
+        }
         customerRepo.deleteById(id);
     }
 
@@ -40,10 +59,5 @@ public class CustomerService {
             return List.of();
         }
         return customerRepo.saveAll(validCustomers);
-    }
-
-    public Customer createCustomer(CustomerDto customerDto){
-        var newCustomer = new Customer(customerDto.name(), customerDto.phoneNumber(), customerDto.email(), customerDto.addressList());
-        return customerRepo.save(newCustomer);
     }
 }

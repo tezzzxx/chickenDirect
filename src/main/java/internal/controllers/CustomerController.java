@@ -1,8 +1,6 @@
 package internal.controllers;
 
-import internal.dtos.AddressDto;
 import internal.dtos.CustomerDto;
-import internal.entities.Address;
 import internal.entities.Customer;
 import internal.services.CustomerService;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/customer")
 public class CustomerController {
 
     private final CustomerService customerService;
-
 
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
@@ -24,12 +23,12 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.findAllCustomers());
     }
 
-    @GetMapping("/customer/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Customer> findCustomerById(@PathVariable long id){
         return ResponseEntity.ok(customerService.findCustomerById(id));
     }
 
-    @DeleteMapping("customer/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCustomerById(@PathVariable long id){
         customerService.deleteCustomerById(id);
         return ResponseEntity.ok("Customer deleted");
