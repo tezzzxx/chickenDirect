@@ -10,8 +10,8 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_seq")
     @SequenceGenerator(name = "customer_seq", sequenceName = "customer_seq", allocationSize = 1)
-    private long customer_id;
 
+    private long customer_id;
     private String name;
     private String phoneNumber;
     private String email;

@@ -2,11 +2,13 @@ package internal.dtos;
 
 import internal.enums.ProductStatus;
 
+import java.math.BigDecimal;
+
 public record ProductDto(
         String name,
         String description,
-        Double price,
+        BigDecimal price,
         ProductStatus productStatus,
-        Long quantity
+        BigDecimal quantity
 ) {
 }

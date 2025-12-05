@@ -3,6 +3,7 @@ package internal.entities;
 import internal.enums.OrderStatus;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,8 @@ public class Order {
     private Address address;
 
     private LocalDate date;
-    private Double total_sum;
-    private long shipping_charge;
+    private BigDecimal total_sum;
+    private BigDecimal shipping_charge;
     private OrderStatus orderStatus;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
@@ -33,7 +34,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(Customer customer, Address address, LocalDate date, Double total_sum, long shipping_charge, OrderStatus orderStatus, List<OrderProduct> items) {
+    public Order(Customer customer, Address address, LocalDate date, BigDecimal total_sum, BigDecimal shipping_charge, OrderStatus orderStatus, List<OrderProduct> items) {
         this.customer = customer;
         this.address = address;
         this.date = date;
@@ -43,7 +44,7 @@ public class Order {
         this.items = items;
     }
 
-    public Order(Customer customer, Address address, LocalDate date, Double total_sum, long shipping_charge, OrderStatus orderStatus) {
+    public Order(Customer customer, Address address, LocalDate date, BigDecimal total_sum, BigDecimal shipping_charge, OrderStatus orderStatus) {
         this.customer = customer;
         this.address = address;
         this.date = date;
@@ -84,19 +85,19 @@ public class Order {
         this.date = date;
     }
 
-    public Double getTotal_sum() {
+    public BigDecimal getTotal_sum() {
         return total_sum;
     }
 
-    public void setTotal_sum(Double total_sum) {
+    public void setTotal_sum(BigDecimal total_sum) {
         this.total_sum = total_sum;
     }
 
-    public long getShipping_charge() {
+    public BigDecimal getShipping_charge() {
         return shipping_charge;
     }
 
-    public void setShipping_charge(long shipping_charge) {
+    public void setShipping_charge(BigDecimal shipping_charge) {
         this.shipping_charge = shipping_charge;
     }
 

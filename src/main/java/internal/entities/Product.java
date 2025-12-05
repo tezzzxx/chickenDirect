@@ -3,6 +3,7 @@ package internal.entities;
 import internal.enums.ProductStatus;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -10,18 +11,18 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
     @SequenceGenerator(name = "product_seq", sequenceName = "product_seq", allocationSize = 1)
-    private long product_id;
 
+    private long product_id;
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price;
     private ProductStatus productStatus;
-    private Long quantity;
+    private BigDecimal quantity;
 
     @OneToMany(mappedBy = "product")
     private List<OrderProduct> order_product;
 
-    public Product(String name, String description, Double price, ProductStatus productStatus, Long quantity, List<OrderProduct> order_product) {
+    public Product(String name, String description, BigDecimal price, ProductStatus productStatus, BigDecimal quantity, List<OrderProduct> order_product) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -30,7 +31,7 @@ public class Product {
         this.order_product = order_product;
     }
 
-    public Product(String name, String description, Double price, ProductStatus productStatus, Long quantity) {
+    public Product(String name, String description, BigDecimal price, ProductStatus productStatus, BigDecimal quantity) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -65,11 +66,11 @@ public class Product {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -81,11 +82,11 @@ public class Product {
         this.productStatus = orderStatus;
     }
 
-    public Long getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 

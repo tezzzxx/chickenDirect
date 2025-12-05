@@ -10,8 +10,8 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_seq")
     @SequenceGenerator(name = "address_seq", sequenceName = "address_seq", allocationSize = 1)
-    private long address_id;
 
+    private long address_id;
     private String apartment_number;
     private String address;
     private String zip_code;

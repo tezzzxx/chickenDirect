@@ -2,6 +2,8 @@ package internal.entities;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 public class OrderProduct {
     @Id
@@ -17,13 +19,13 @@ public class OrderProduct {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private int quantity;
-    private int unit_price;
+    private BigDecimal quantity;
+    private BigDecimal unit_price;
 
     public OrderProduct() {
     }
 
-    public OrderProduct(Order order, Product product, int quantity, int unit_price) {
+    public OrderProduct(Order order, Product product, BigDecimal quantity, BigDecimal unit_price) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;
@@ -54,19 +56,19 @@ public class OrderProduct {
         this.product = product;
     }
 
-    public long getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 
-    public long getUnit_price() {
+    public BigDecimal getUnit_price() {
         return unit_price;
     }
 
-    public void setUnit_price(int unit_price) {
+    public void setUnit_price(BigDecimal unit_price) {
         this.unit_price = unit_price;
     }
 
