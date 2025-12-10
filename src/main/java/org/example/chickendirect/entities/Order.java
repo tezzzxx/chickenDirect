@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "customer_order")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
@@ -23,7 +24,7 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
-
+    @Column(name = "order_date", nullable = false)
     private LocalDate date;
     @Column(name = "total_sum")
     private BigDecimal totalSum;

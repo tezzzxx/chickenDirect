@@ -14,10 +14,12 @@ public class Product {
 
     @Column(name = "product_id")
     private long productId;
+
     private String name;
     private String description;
     private BigDecimal price;
     @Enumerated(EnumType.STRING)
+    @Column(name = "product_status", nullable = false)
     private ProductStatus productStatus;
     private int quantity;
     @Column(nullable = false)
