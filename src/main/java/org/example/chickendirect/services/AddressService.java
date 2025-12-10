@@ -3,7 +3,6 @@ package org.example.chickendirect.services;
 import org.example.chickendirect.dtos.AddressDto;
 import org.example.chickendirect.entities.Address;
 import org.example.chickendirect.repos.AddressRepo;
-import org.example.chickendirect.repos.CustomerRepo;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,12 +10,10 @@ public class AddressService {
 
     private final CustomerService customerService;
     private final AddressRepo addressRepo;
-    private final CustomerRepo customerRepo;
 
-    public AddressService(CustomerService customerService, AddressRepo addressRepo, CustomerRepo customerRepo) {
+    public AddressService(CustomerService customerService, AddressRepo addressRepo) {
         this.customerService = customerService;
         this.addressRepo = addressRepo;
-        this.customerRepo = customerRepo;
     }
 
     public Address createAddress(AddressDto addressDto){
@@ -34,9 +31,11 @@ public class AddressService {
                     newAddress.setAddress(addressDto.address());
                     newAddress.setZipCode(addressDto.zipCode());
                     newAddress.setCity(addressDto.city());
+                    newAddress.setCountry(addressDto.country());
                     return newAddress;
                 });
 
+        address.setCountry(addressDto.country());
         return addressRepo.save(address);
 
     }
