@@ -3,6 +3,7 @@ package org.example.chickendirect.controllers;
 import org.example.chickendirect.dtos.CustomerDto;
 import org.example.chickendirect.entities.Customer;
 import org.example.chickendirect.services.CustomerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +42,8 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<Customer> createCustomer(@RequestBody CustomerDto customerDto){
-        return ResponseEntity.ok(customerService.createCustomer(customerDto));
+        Customer createdCustomer = customerService.createCustomer(customerDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomer);
     }
 
 }
