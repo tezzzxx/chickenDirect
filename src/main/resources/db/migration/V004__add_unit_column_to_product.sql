@@ -1,0 +1,2 @@
+AlTER TABLE product
+ADD COLUMN unit VARCHAR(8) NOT NULL DEFAULT 'kg';

@@ -17,8 +17,11 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
+    @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
     private int quantity;
+    @Column(nullable = false)
+    private String unit;
 
     @OneToMany(mappedBy = "product")
     private List<OrderProduct> orderProduct;
@@ -32,12 +35,13 @@ public class Product {
         this.orderProduct = orderProduct;
     }
 
-    public Product(String name, String description, BigDecimal price, ProductStatus productStatus, int quantity) {
+    public Product(String name, String description, BigDecimal price, ProductStatus productStatus, int quantity, String unit) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.productStatus = productStatus;
         this.quantity = quantity;
+        this.unit = unit;
     }
 
     public Product() {
@@ -47,8 +51,8 @@ public class Product {
         return productId;
     }
 
-    public void setProductId(long product_id) {
-        this.productId = product_id;
+    public void setProductId(long productId) {
+        this.productId = productId;
     }
 
     public String getName() {
@@ -79,8 +83,8 @@ public class Product {
         return productStatus;
     }
 
-    public void setProductStatus(ProductStatus orderStatus) {
-        this.productStatus = orderStatus;
+    public void setProductStatus(ProductStatus productStatus) {
+        this.productStatus = productStatus;
     }
 
     public int getQuantity() {
@@ -91,24 +95,33 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
     public List<OrderProduct> getOrderProduct() {
         return orderProduct;
     }
 
-    public void setOrderProduct(List<OrderProduct> order_product) {
-        this.orderProduct = order_product;
+    public void setOrderProduct(List<OrderProduct> orderProduct) {
+        this.orderProduct = orderProduct;
     }
 
     @Override
     public String toString() {
         return "Product{" +
-                "product_id=" + productId +
+                "productId=" + productId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", productStatus=" + productStatus +
                 ", quantity=" + quantity +
-                ", order_product=" + orderProduct +
+                ", unit='" + unit + '\'' +
+                ", orderProduct=" + orderProduct +
                 '}';
     }
 }

@@ -29,6 +29,7 @@ public class Order {
     private BigDecimal totalSum;
     @Column(name = "shipping_charge")
     private BigDecimal shippingCharge;
+    @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
