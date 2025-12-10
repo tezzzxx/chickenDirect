@@ -7,7 +7,7 @@ public record OrderProductOutputDto(
         long orderProductId,
         long productId,
         String name,
-        BigDecimal quantity,
+        int quantity,
         BigDecimal unitPrice,
         BigDecimal totalPrice
 ) {

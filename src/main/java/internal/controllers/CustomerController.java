@@ -34,9 +34,9 @@ public class CustomerController {
         return ResponseEntity.ok("Customer deleted");
     }
 
-    @PostMapping
-    public ResponseEntity<List<Customer>> saveAllCustomers(@RequestBody Customer customer){
-        return ResponseEntity.ok(customerService.saveAllCustomers((List<Customer>) customer));
+    @PostMapping("/save")
+   public ResponseEntity<List<Customer>> saveAllCustomers(@RequestBody Customer customer){
+      return ResponseEntity.ok(customerService.saveAllCustomers((List<Customer>) customer));
     }
 
     @PostMapping

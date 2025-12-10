@@ -1,5 +1,6 @@
 package org.example.chickendirect;
 
+import internal.ChickenDirectApplication;
 import org.springframework.boot.SpringApplication;
 
 public class TestChickenDirectApplication {

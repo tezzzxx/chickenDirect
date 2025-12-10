@@ -18,8 +18,8 @@ public class Address {
     private String city;
     private String country;
 
-    @ManyToMany (mappedBy = "address")
-    @JsonIgnoreProperties("address")
+    @ManyToMany (mappedBy = "addressList")
+    @JsonIgnoreProperties("addressList")
     private List<Customer> customerList;
 
     public Address(String apartment_number, String address, String zip_code, String city, String country, List<Customer> customerList) {

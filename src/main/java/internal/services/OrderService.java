@@ -82,7 +82,6 @@ public class OrderService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Order not found with id " + id));
         return mapToDto(order);
-
     }
 
     public void deleteOrderById(long id){
@@ -100,7 +99,7 @@ public class OrderService {
                         op.getProduct().getName(),
                         op.getQuantity(),
                         op.getUnit_price(),
-                        op.getUnit_price().multiply(op.getQuantity())
+                        op.getUnit_price().multiply(BigDecimal.valueOf(op.getQuantity()))
                 ))
                 .toList();
 
@@ -118,7 +117,7 @@ public class OrderService {
 
     private BigDecimal calculateTotal(List<OrderProduct> orderProducts) {
         return orderProducts.stream()
-                .map(op -> op.getUnit_price().multiply(op.getQuantity()))
+                .map(op -> op.getUnit_price().multiply(BigDecimal.valueOf(op.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

@@ -16,13 +16,13 @@ public class Customer {
     private String phoneNumber;
     private String email;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "customer_address",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id")
     )
-    @JsonIgnoreProperties("customer")
+    @JsonIgnoreProperties("customerList")
     private List<Address> addressList;
 
 
@@ -35,7 +35,6 @@ public class Customer {
 
     public Customer() {
     }
-
 
     public long getCustomer_id() {
         return customer_id;

@@ -1,12 +1,16 @@
 package internal.services;
 
+import internal.dtos.AddressDto;
 import internal.dtos.CustomerDto;
+import internal.entities.Address;
 import internal.entities.Customer;
+import internal.repos.AddressRepo;
 import internal.repos.CustomerRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,19 +18,49 @@ import java.util.Objects;
 public class CustomerService {
 
     private final CustomerRepo customerRepo;
+    private final AddressRepo addressRepo;
 
-    public CustomerService(CustomerRepo customerRepo) {
+    public CustomerService(CustomerRepo customerRepo, AddressRepo addressRepo) {
         this.customerRepo = customerRepo;
+        this.addressRepo = addressRepo;
     }
 
     public Customer createCustomer(CustomerDto customerDto){
-        var newCustomer = new Customer(
-                customerDto.name(),
-                customerDto.phoneNumber(),
-                customerDto.email(),
-                customerDto.addressList()
-        );
+
+        Customer newCustomer = new Customer();
+        newCustomer.setName(customerDto.name());
+        newCustomer.setPhoneNumber(customerDto.phoneNumber());
+        newCustomer.setEmail(customerDto.email());
+
+        List<Address> addresses = new ArrayList<>();
+
+        for(AddressDto addressDto : customerDto.addressList()){
+            Address address = addressRepo
+                    .findByApartment_numberAndAddressAndZip_codeAndCity(
+                            addressDto.apartment_number(),
+                            addressDto.address(),
+                            addressDto.zip_code(),
+                            addressDto.city()
+                    )
+                    .orElseGet(() -> {
+                        Address newAddress= new Address();
+                        newAddress.setApartment_number(addressDto.apartment_number());
+                        newAddress.setAddress(addressDto.address());
+                        newAddress.setZip_code(addressDto.zip_code());
+                        newAddress.setCity(addressDto.city());
+                        newAddress.setCountry(addressDto.country());
+                        return newAddress;
+                    });
+            if(address.getCustomerList() == null){
+                address.setCustomerList(new ArrayList<>());
+            }
+            address.getCustomerList().add(newCustomer);
+            addresses.add(address);
+        }
+
+        newCustomer.setAddressList(addresses);
         return customerRepo.save(newCustomer);
+
     }
 
     public List<Customer> findAllCustomers(){

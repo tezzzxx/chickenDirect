@@ -19,13 +19,13 @@ public class OrderProduct {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private BigDecimal quantity;
+    private int quantity;
     private BigDecimal unit_price;
 
     public OrderProduct() {
     }
 
-    public OrderProduct(Order order, Product product, BigDecimal quantity, BigDecimal unit_price) {
+    public OrderProduct(Order order, Product product, int quantity, BigDecimal unit_price) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;
@@ -56,11 +56,11 @@ public class OrderProduct {
         this.product = product;
     }
 
-    public BigDecimal getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(BigDecimal quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

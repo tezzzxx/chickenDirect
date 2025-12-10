@@ -17,12 +17,12 @@ public class Product {
     private String description;
     private BigDecimal price;
     private ProductStatus productStatus;
-    private BigDecimal quantity;
+    private int quantity;
 
     @OneToMany(mappedBy = "product")
     private List<OrderProduct> order_product;
 
-    public Product(String name, String description, BigDecimal price, ProductStatus productStatus, BigDecimal quantity, List<OrderProduct> order_product) {
+    public Product(String name, String description, BigDecimal price, ProductStatus productStatus, int quantity, List<OrderProduct> order_product) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -31,7 +31,7 @@ public class Product {
         this.order_product = order_product;
     }
 
-    public Product(String name, String description, BigDecimal price, ProductStatus productStatus, BigDecimal quantity) {
+    public Product(String name, String description, BigDecimal price, ProductStatus productStatus, int quantity) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -82,11 +82,11 @@ public class Product {
         this.productStatus = orderStatus;
     }
 
-    public BigDecimal getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(BigDecimal quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

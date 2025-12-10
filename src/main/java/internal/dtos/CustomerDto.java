@@ -8,7 +8,7 @@ public record CustomerDto(
         String name,
         String phoneNumber,
         String email,
-        List<Address> addressList
+        List<AddressDto> addressList
 )
 {
 }

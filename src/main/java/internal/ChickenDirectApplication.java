@@ -1,4 +1,4 @@
-package org.example.chickendirect;
+package internal;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
