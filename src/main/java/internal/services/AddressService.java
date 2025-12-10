@@ -1,15 +1,10 @@
 package internal.services;
 
 import internal.dtos.AddressDto;
-import internal.dtos.CustomerDto;
 import internal.entities.Address;
-import internal.entities.Customer;
 import internal.repos.AddressRepo;
 import internal.repos.CustomerRepo;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class AddressService {
@@ -27,17 +22,17 @@ public class AddressService {
     public Address createAddress(AddressDto addressDto){
 
         Address address = addressRepo
-                .findByApartment_numberAndAddressAndZip_codeAndCity(
-                        addressDto.apartment_number(),
+                .findByApartmentNumberAndAddressAndZipCodeAndCity(
+                        addressDto.apartmentNumber(),
                         addressDto.address(),
-                        addressDto.zip_code(),
+                        addressDto.zipCode(),
                         addressDto.city()
                 )
                 .orElseGet(() -> {
                     Address newAddress = new Address();
-                    newAddress.setApartment_number(addressDto.apartment_number());
+                    newAddress.setApartmentNumber(addressDto.apartmentNumber());
                     newAddress.setAddress(addressDto.address());
-                    newAddress.setZip_code(addressDto.zip_code());
+                    newAddress.setZipCode(addressDto.zipCode());
                     newAddress.setCity(addressDto.city());
                     return newAddress;
                 });

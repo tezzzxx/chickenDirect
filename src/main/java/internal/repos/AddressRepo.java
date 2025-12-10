@@ -8,10 +8,10 @@ import java.util.Optional;
 
 @Repository
 public interface AddressRepo extends JpaRepository<Address, Long> {
-    Optional<Address> findByApartment_numberAndAddressAndZip_codeAndCity(
-            String apartment_number,
+    Optional<Address> findByApartmentNumberAndAddressAndZipCodeAndCity(
+            String apartmentNumber,
             String address,
-            String zip_code,
+            String zipCode,
             String city
     );
 }

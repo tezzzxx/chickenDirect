@@ -11,7 +11,8 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_seq")
     @SequenceGenerator(name = "customer_seq", sequenceName = "customer_seq", allocationSize = 1)
 
-    private long customer_id;
+    @Column(name = "customer_id")
+    private long customerId;
     private String name;
     private String phoneNumber;
     private String email;
@@ -36,12 +37,12 @@ public class Customer {
     public Customer() {
     }
 
-    public long getCustomer_id() {
-        return customer_id;
+    public long getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer_id(long customer_id) {
-        this.customer_id = customer_id;
+    public void setCustomerId(long customer_id) {
+        this.customerId = customer_id;
     }
 
     public String getName() {
@@ -79,7 +80,7 @@ public class Customer {
     @Override
     public String toString() {
         return "Customer{" +
-                "customer_id=" + customer_id +
+                "customer_id=" + customerId +
                 ", name='" + name + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", email='" + email + '\'' +

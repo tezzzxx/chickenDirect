@@ -12,7 +12,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
     @SequenceGenerator(name = "product_seq", sequenceName = "product_seq", allocationSize = 1)
 
-    private long product_id;
+    @Column(name = "product_id")
+    private long productId;
     private String name;
     private String description;
     private BigDecimal price;
@@ -20,15 +21,15 @@ public class Product {
     private int quantity;
 
     @OneToMany(mappedBy = "product")
-    private List<OrderProduct> order_product;
+    private List<OrderProduct> orderProduct;
 
-    public Product(String name, String description, BigDecimal price, ProductStatus productStatus, int quantity, List<OrderProduct> order_product) {
+    public Product(String name, String description, BigDecimal price, ProductStatus productStatus, int quantity, List<OrderProduct> orderProduct) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.productStatus = productStatus;
         this.quantity = quantity;
-        this.order_product = order_product;
+        this.orderProduct = orderProduct;
     }
 
     public Product(String name, String description, BigDecimal price, ProductStatus productStatus, int quantity) {
@@ -42,12 +43,12 @@ public class Product {
     public Product() {
     }
 
-    public long getProduct_id() {
-        return product_id;
+    public long getProductId() {
+        return productId;
     }
 
-    public void setProduct_id(long product_id) {
-        this.product_id = product_id;
+    public void setProductId(long product_id) {
+        this.productId = product_id;
     }
 
     public String getName() {
@@ -90,24 +91,24 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public List<OrderProduct> getOrder_product() {
-        return order_product;
+    public List<OrderProduct> getOrderProduct() {
+        return orderProduct;
     }
 
-    public void setOrder_product(List<OrderProduct> order_product) {
-        this.order_product = order_product;
+    public void setOrderProduct(List<OrderProduct> order_product) {
+        this.orderProduct = order_product;
     }
 
     @Override
     public String toString() {
         return "Product{" +
-                "product_id=" + product_id +
+                "product_id=" + productId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", productStatus=" + productStatus +
                 ", quantity=" + quantity +
-                ", order_product=" + order_product +
+                ", order_product=" + orderProduct +
                 '}';
     }
 }

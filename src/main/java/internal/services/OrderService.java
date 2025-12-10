@@ -57,14 +57,14 @@ public class OrderService {
                     op.setOrder(order);
                     op.setProduct(product);
                     op.setQuantity(item.quantity());
-                    op.setUnit_price(product.getPrice());
+                    op.setUnitPrice(product.getPrice());
                     return op;
                 })
                 .toList();
 
         order.setItems(orderProducts);
-        order.setTotal_sum(calculateTotal(orderProducts));
-        order.setShipping_charge(calculateShipping(orderProducts));
+        order.setTotalSum(calculateTotal(orderProducts));
+        order.setShippingCharge(calculateShipping(orderProducts));
 
         Order savedOrder = orderRepo.save(order);
         return mapToDto(savedOrder);
@@ -94,22 +94,22 @@ public class OrderService {
     private OrderOutputDto mapToDto(Order order){
         List<OrderProductOutputDto> items = order.getItems().stream()
                 .map(op -> new OrderProductOutputDto(
-                        op.getOrder_product_id(),
-                        op.getProduct().getProduct_id(),
+                        op.getOrderProductId(),
+                        op.getProduct().getProductId(),
                         op.getProduct().getName(),
                         op.getQuantity(),
-                        op.getUnit_price(),
-                        op.getUnit_price().multiply(BigDecimal.valueOf(op.getQuantity()))
+                        op.getUnitPrice(),
+                        op.getUnitPrice().multiply(BigDecimal.valueOf(op.getQuantity()))
                 ))
                 .toList();
 
         return new OrderOutputDto(
-                order.getOrder_id(),
-                order.getCustomer().getCustomer_id(),
-                order.getAddress().getAddress_id(),
+                order.getOrderId(),
+                order.getCustomer().getCustomerId(),
+                order.getAddress().getAddressId(),
                 order.getDate(),
-                order.getTotal_sum(),
-                order.getShipping_charge(),
+                order.getTotalSum(),
+                order.getShippingCharge(),
                 order.getOrderStatus(),
                 items
         );
@@ -117,7 +117,7 @@ public class OrderService {
 
     private BigDecimal calculateTotal(List<OrderProduct> orderProducts) {
         return orderProducts.stream()
-                .map(op -> op.getUnit_price().multiply(BigDecimal.valueOf(op.getQuantity())))
+                .map(op -> op.getUnitPrice().multiply(BigDecimal.valueOf(op.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

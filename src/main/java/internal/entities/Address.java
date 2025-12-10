@@ -11,10 +11,13 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_seq")
     @SequenceGenerator(name = "address_seq", sequenceName = "address_seq", allocationSize = 1)
 
-    private long address_id;
-    private String apartment_number;
+    @Column(name = "address_id")
+    private long addressId;
+    @Column(name = "apartment_number")
+    private String apartmentNumber;
     private String address;
-    private String zip_code;
+    @Column(name = "zip_code")
+    private String zipCode;
     private String city;
     private String country;
 
@@ -22,19 +25,19 @@ public class Address {
     @JsonIgnoreProperties("addressList")
     private List<Customer> customerList;
 
-    public Address(String apartment_number, String address, String zip_code, String city, String country, List<Customer> customerList) {
-        this.apartment_number = apartment_number;
+    public Address(String apartmentNumber, String address, String zipCode, String city, String country, List<Customer> customerList) {
+        this.apartmentNumber = apartmentNumber;
         this.address = address;
-        this.zip_code = zip_code;
+        this.zipCode = zipCode;
         this.city = city;
         this.country = country;
         this.customerList = customerList;
     }
 
-    public Address(List<Customer> customerList, String apartment_number, String address, String zip_code, String city, String country) {
-        this.apartment_number = apartment_number;
+    public Address(List<Customer> customerList, String apartmentNumber, String address, String zipCode, String city, String country) {
+        this.apartmentNumber = apartmentNumber;
         this.address = address;
-        this.zip_code = zip_code;
+        this.zipCode = zipCode;
         this.city = city;
         this.country = country;
     }
@@ -42,12 +45,12 @@ public class Address {
     public Address() {
     }
 
-    public long getAddress_id() {
-        return address_id;
+    public long getAddressId() {
+        return addressId;
     }
 
-    public void setAddress_id(long address_id) {
-        this.address_id = address_id;
+    public void setAddressId(long address_id) {
+        this.addressId = address_id;
     }
 
     public List<Customer> getCustomerList() {
@@ -58,12 +61,12 @@ public class Address {
         this.customerList = customers;
     }
 
-    public String getApartment_number() {
-        return apartment_number;
+    public String getApartmentNumber() {
+        return apartmentNumber;
     }
 
-    public void setApartment_number(String apartment_number) {
-        this.apartment_number = apartment_number;
+    public void setApartmentNumber(String apartment_number) {
+        this.apartmentNumber = apartment_number;
     }
 
     public String getAddress() {
@@ -74,12 +77,12 @@ public class Address {
         this.address = address;
     }
 
-    public String getZip_code() {
-        return zip_code;
+    public String getZipCode() {
+        return zipCode;
     }
 
-    public void setZip_code(String zip_code) {
-        this.zip_code = zip_code;
+    public void setZipCode(String zip_code) {
+        this.zipCode = zip_code;
     }
 
     public String getCity() {
@@ -101,10 +104,10 @@ public class Address {
     @Override
     public String toString() {
         return "Address{" +
-                "address_id=" + address_id +
-                ", apartment_number='" + apartment_number + '\'' +
+                "address_id=" + addressId +
+                ", apartment_number='" + apartmentNumber + '\'' +
                 ", address='" + address + '\'' +
-                ", zip_code='" + zip_code + '\'' +
+                ", zip_code='" + zipCode + '\'' +
                 ", city='" + city + '\'' +
                 ", country='" + country + '\'' +
                 ", customerList=" + customerList +

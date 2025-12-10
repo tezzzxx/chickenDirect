@@ -36,17 +36,17 @@ public class CustomerService {
 
         for(AddressDto addressDto : customerDto.addressList()){
             Address address = addressRepo
-                    .findByApartment_numberAndAddressAndZip_codeAndCity(
-                            addressDto.apartment_number(),
+                    .findByApartmentNumberAndAddressAndZipCodeAndCity(
+                            addressDto.apartmentNumber(),
                             addressDto.address(),
-                            addressDto.zip_code(),
+                            addressDto.zipCode(),
                             addressDto.city()
                     )
                     .orElseGet(() -> {
                         Address newAddress= new Address();
-                        newAddress.setApartment_number(addressDto.apartment_number());
+                        newAddress.setApartmentNumber(addressDto.apartmentNumber());
                         newAddress.setAddress(addressDto.address());
-                        newAddress.setZip_code(addressDto.zip_code());
+                        newAddress.setZipCode(addressDto.zipCode());
                         newAddress.setCity(addressDto.city());
                         newAddress.setCountry(addressDto.country());
                         return newAddress;

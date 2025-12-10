@@ -3,9 +3,9 @@ package internal.dtos;
 import java.util.List;
 
 public record AddressDto (
-    String apartment_number,
+    String apartmentNumber,
     String address,
-    String zip_code,
+    String zipCode,
     String city,
     String country,
     List<CustomerDto> customerList

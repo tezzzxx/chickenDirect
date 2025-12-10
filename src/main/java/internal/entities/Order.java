@@ -13,7 +13,8 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
     @SequenceGenerator(name = "order_seq", sequenceName = "order_seq", allocationSize = 1)
-    private long order_id;
+    @Column(name = "order_id")
+    private long orderId;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -24,8 +25,10 @@ public class Order {
     private Address address;
 
     private LocalDate date;
-    private BigDecimal total_sum;
-    private BigDecimal shipping_charge;
+    @Column(name = "total_sum")
+    private BigDecimal totalSum;
+    @Column(name = "shipping_charge")
+    private BigDecimal shippingCharge;
     private OrderStatus orderStatus;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
@@ -34,31 +37,31 @@ public class Order {
     public Order() {
     }
 
-    public Order(Customer customer, Address address, LocalDate date, BigDecimal total_sum, BigDecimal shipping_charge, OrderStatus orderStatus, List<OrderProduct> items) {
+    public Order(Customer customer, Address address, LocalDate date, BigDecimal totalSum, BigDecimal shippingCharge, OrderStatus orderStatus, List<OrderProduct> items) {
         this.customer = customer;
         this.address = address;
         this.date = date;
-        this.total_sum = total_sum;
-        this.shipping_charge = shipping_charge;
+        this.totalSum = totalSum;
+        this.shippingCharge = shippingCharge;
         this.orderStatus = orderStatus;
         this.items = items;
     }
 
-    public Order(Customer customer, Address address, LocalDate date, BigDecimal total_sum, BigDecimal shipping_charge, OrderStatus orderStatus) {
+    public Order(Customer customer, Address address, LocalDate date, BigDecimal totalSum, BigDecimal shippingCharge, OrderStatus orderStatus) {
         this.customer = customer;
         this.address = address;
         this.date = date;
-        this.total_sum = total_sum;
-        this.shipping_charge = shipping_charge;
+        this.totalSum = totalSum;
+        this.shippingCharge = shippingCharge;
         this.orderStatus = orderStatus;
     }
 
-    public long getOrder_id() {
-        return order_id;
+    public long getOrderId() {
+        return orderId;
     }
 
-    public void setOrder_id(long order_id) {
-        this.order_id = order_id;
+    public void setOrderId(long order_id) {
+        this.orderId = order_id;
     }
 
     public Customer getCustomer() {
@@ -85,20 +88,20 @@ public class Order {
         this.date = date;
     }
 
-    public BigDecimal getTotal_sum() {
-        return total_sum;
+    public BigDecimal getTotalSum() {
+        return totalSum;
     }
 
-    public void setTotal_sum(BigDecimal total_sum) {
-        this.total_sum = total_sum;
+    public void setTotalSum(BigDecimal total_sum) {
+        this.totalSum = total_sum;
     }
 
-    public BigDecimal getShipping_charge() {
-        return shipping_charge;
+    public BigDecimal getShippingCharge() {
+        return shippingCharge;
     }
 
-    public void setShipping_charge(BigDecimal shipping_charge) {
-        this.shipping_charge = shipping_charge;
+    public void setShippingCharge(BigDecimal shipping_charge) {
+        this.shippingCharge = shipping_charge;
     }
 
     public OrderStatus getOrderStatus() {
@@ -120,12 +123,12 @@ public class Order {
     @Override
     public String toString() {
         return "Order{" +
-                "order_id=" + order_id +
+                "order_id=" + orderId +
                 ", customer=" + customer +
                 ", address=" + address +
                 ", date=" + date +
-                ", total_sum=" + total_sum +
-                ", shipping_charge=" + shipping_charge +
+                ", total_sum=" + totalSum +
+                ", shipping_charge=" + shippingCharge +
                 ", orderStatus=" + orderStatus +
                 ", items=" + items +
                 '}';
