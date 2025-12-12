@@ -6,6 +6,8 @@ import org.example.chickendirect.repos.ProductRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,15 +45,16 @@ public class ProductService {
                 .toList();
     }
 
-   /* public Product updateProduct(ProductDto productDto){
+    public Product updateProductPrice(String name, BigDecimal newPrice){
+        Product product = productRepo.findByName(name)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found: " + name));
 
-        Product product = productRepo.findByName(productDto.name());
-
-
-    }*/
+                product.setPrice(newPrice);
+                return productRepo.save(product);
+    }
 
     public List<Product> findAllProducts(){
-        return productRepo.findAll();
+        return productRepo.findAllByOrderByProductIdAsc();
     }
 
     public Product findProductById(long id){
