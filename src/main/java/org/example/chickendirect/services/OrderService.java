@@ -1,4 +1,5 @@
 package org.example.chickendirect.services;
+import org.springframework.transaction.annotation.Transactional;
 import org.example.chickendirect.dtos.OrderInputDto;
 import org.example.chickendirect.dtos.OrderOutputDto;
 import org.example.chickendirect.dtos.OrderProductOutputDto;
@@ -33,6 +34,7 @@ public class OrderService {
         this.productRepo = productRepo;
     }
 
+    @Transactional
     public OrderOutputDto createOrder(OrderInputDto input){
 
         Customer customer = customerRepo.findById(input.customerId())
@@ -49,9 +51,29 @@ public class OrderService {
 
         List<OrderProduct> orderProducts = input.productItems().stream()
                 .map(item -> {
-                    Product product = productRepo.findById(item.productId())
+                    Product product = productRepo.findByIdForUpdate(item.productId())
                             .orElseThrow(() -> new ResponseStatusException(
                                     HttpStatus.NOT_FOUND, "Product not found with id" + item.productId()));
+
+                    int orderedQuantity = item.quantity();
+                    int stockQuantity = product.getQuantity();
+
+                    if (stockQuantity <= 0){
+                        throw new ResponseStatusException(
+                                HttpStatus.BAD_REQUEST,
+                                "Product '" + product.getName() + "' is out of stock"
+                        );
+                    }
+
+                    if (orderedQuantity > stockQuantity){
+                        throw new ResponseStatusException(
+                                HttpStatus.BAD_REQUEST,
+                                "Product '" + product.getName() + "' only has " + stockQuantity + " units in stock. Please reduce the units in your order. We are sorry for the inconvenience, it will shortly be restocked"
+                        );
+                    }
+
+                    product.setQuantity(stockQuantity - orderedQuantity);
+                    productRepo.save(product);
 
                     OrderProduct op = new OrderProduct();
                     op.setOrder(order);

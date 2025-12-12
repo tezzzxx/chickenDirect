@@ -9,7 +9,7 @@ public record ProductDto(
         String description,
         BigDecimal price,
         ProductStatus productStatus,
-        int quantity,
+        Integer quantity,
         String unit
 ) {
 }
