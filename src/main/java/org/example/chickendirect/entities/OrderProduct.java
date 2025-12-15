@@ -17,6 +17,10 @@ public class OrderProduct {
     private Order order;
 
     @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
@@ -27,12 +31,14 @@ public class OrderProduct {
     public OrderProduct() {
     }
 
-    public OrderProduct(Order order, Product product, int quantity, BigDecimal unitPrice) {
+    public OrderProduct(Order order, Customer customer, Product product, int quantity, BigDecimal unitPrice) {
         this.order = order;
+        this.customer = customer;
         this.product = product;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
     }
+
 
     public long getOrderProductId() {
         return orderProductId;
@@ -74,14 +80,23 @@ public class OrderProduct {
         this.unitPrice = unit_price;
     }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
     @Override
     public String toString() {
         return "OrderProduct{" +
-                "order_product_id=" + orderProductId +
+                "orderProductId=" + orderProductId +
                 ", order=" + order +
+                ", customer=" + customer +
                 ", product=" + product +
                 ", quantity=" + quantity +
-                ", unit_price=" + unitPrice +
+                ", unitPrice=" + unitPrice +
                 '}';
     }
 }
