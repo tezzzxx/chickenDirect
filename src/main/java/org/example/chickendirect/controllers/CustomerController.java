@@ -19,10 +19,24 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
+    @PostMapping
+    public ResponseEntity<Customer> createCustomer(@RequestBody CustomerDto customerDto){
+        return  ResponseEntity.status(HttpStatus.CREATED)
+                .body(customerService.createCustomer(customerDto));
+    }
+
+    @PutMapping("/{customerId}")
+    public ResponseEntity<Customer> updateCustomerById(
+            @PathVariable Long customerId,
+            @RequestBody CustomerDto customerDto){
+        return ResponseEntity.ok(customerService.updateCustomerById(customerId, customerDto));
+    }
+
     @GetMapping
     public ResponseEntity<List<Customer>> findAllCustomers(){
         return ResponseEntity.ok(customerService.findAllCustomers());
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Customer> findCustomerById(@PathVariable long id){
@@ -40,10 +54,7 @@ public class CustomerController {
       return ResponseEntity.ok(customerService.saveAllCustomers((List<Customer>) customer));
     }
 
-    @PostMapping
-    public ResponseEntity<Customer> createCustomer(@RequestBody CustomerDto customerDto){
-        Customer createdCustomer = customerService.createCustomer(customerDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomer);
-    }
+
+
 
 }

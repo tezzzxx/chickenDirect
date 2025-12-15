@@ -3,6 +3,7 @@ package org.example.chickendirect.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,7 @@ public class Address {
 
     @ManyToMany (mappedBy = "addressList")
     @JsonIgnoreProperties("addressList")
-    private List<Customer> customerList;
+    private List<Customer> customerList = new ArrayList<>();
 
     public Address(String apartmentNumber, String address, String zipCode, String city, String country, List<Customer> customerList) {
         this.apartmentNumber = apartmentNumber;

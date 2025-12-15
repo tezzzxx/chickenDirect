@@ -1,9 +1,7 @@
 package org.example.chickendirect.controllers;
 
 import org.example.chickendirect.dtos.AddressDto;
-import org.example.chickendirect.dtos.CustomerDto;
 import org.example.chickendirect.entities.Address;
-import org.example.chickendirect.entities.Customer;
 import org.example.chickendirect.services.AddressService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +18,22 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-    @PostMapping
-    public ResponseEntity<Address> createAddress(@RequestBody AddressDto addressDto){
-        Address createAddress = addressService.createAddress(addressDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createAddress);
+    @PostMapping("/{customerId}")
+    public ResponseEntity<Address> addNewAddress(
+            @PathVariable Long customerId,
+            @RequestBody AddressDto addressDto){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(addressService.addNewAddress(customerId, addressDto));
     }
+
+    @PutMapping("/{customerId}/{addressId}")
+    public ResponseEntity<Address> updateAddress(
+            @PathVariable Long customerId,
+            @PathVariable Long addressId,
+            @RequestBody AddressDto addressDto){
+        return ResponseEntity.ok(addressService.updateAddress(customerId, addressId, addressDto));
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Address> getAddressById(@PathVariable long id){

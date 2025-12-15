@@ -3,6 +3,7 @@ package org.example.chickendirect.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,6 +16,7 @@ public class Customer {
     private long customerId;
     private String name;
     private String phoneNumber;
+    @Column(unique = true)
     private String email;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -24,7 +26,7 @@ public class Customer {
             inverseJoinColumns = @JoinColumn(name = "address_id")
     )
     @JsonIgnoreProperties("customerList")
-    private List<Address> addressList;
+    private List<Address> addressList = new ArrayList<>();
 
 
     public Customer(String name, String phoneNumber, String email, List<Address> addressList) {
