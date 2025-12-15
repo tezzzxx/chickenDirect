@@ -21,8 +21,8 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderOutputDto> createOrder(@RequestBody OrderInputDto input){
-        OrderOutputDto orderOutputDto = orderService.createOrder(input);
-        return new ResponseEntity<>(orderOutputDto, HttpStatus.CREATED);
+        OrderOutputDto order = orderService.createOrder(input);
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -30,14 +30,14 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findAllOrders());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderOutputDto> findOrderById(@PathVariable long id){
-        return ResponseEntity.ok(orderService.findOrderById(id));
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderOutputDto> findOrderById(@PathVariable long orderId){
+        return ResponseEntity.ok(orderService.findOrderById(orderId));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteOrderById(@PathVariable long id){
-        orderService.deleteOrderById(id);
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<String> deleteOrderById(@PathVariable long orderId){
+        orderService.deleteOrderById(orderId);
         return ResponseEntity.ok("Order deleted");
     }
 

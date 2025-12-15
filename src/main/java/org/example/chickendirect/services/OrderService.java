@@ -1,8 +1,7 @@
 package org.example.chickendirect.services;
+import org.example.chickendirect.dtos.*;
+import org.example.chickendirect.enums.ProductStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.example.chickendirect.dtos.OrderInputDto;
-import org.example.chickendirect.dtos.OrderOutputDto;
-import org.example.chickendirect.dtos.OrderProductOutputDto;
 import org.example.chickendirect.entities.*;
 import org.example.chickendirect.enums.OrderStatus;
 import org.example.chickendirect.repos.AddressRepo;
@@ -27,6 +26,8 @@ public class OrderService {
     private static final BigDecimal FREE_SHIPPING_LIMIT = new BigDecimal("600");
     private static final BigDecimal STANDARD_SHIPPING = new BigDecimal("150");
 
+    private static final int LOW_STOCK_THRESHOLD = 10;
+
     public OrderService(OrderRepo orderRepo, CustomerRepo customerRepo, AddressRepo addressRepo, ProductRepo productRepo) {
         this.orderRepo = orderRepo;
         this.customerRepo = customerRepo;
@@ -35,13 +36,10 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderOutputDto createOrder(OrderInputDto input){
+    public OrderOutputDto createOrder(OrderInputDto input) {
 
-        Customer customer = customerRepo.findById(input.customerId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
-
-        Address address = addressRepo.findById(input.addressId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not found"));
+        Customer customer = fetchCustomer(input.customerId());
+        Address address = fetchAddress(input.addressId());
 
         Order order = new Order();
         order.setCustomer(customer);
@@ -50,38 +48,7 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.CONFIRMED);
 
         List<OrderProduct> orderProducts = input.productItems().stream()
-                .map(item -> {
-                    Product product = productRepo.findByIdForUpdate(item.productId())
-                            .orElseThrow(() -> new ResponseStatusException(
-                                    HttpStatus.NOT_FOUND, "Product not found with id" + item.productId()));
-
-                    int orderedQuantity = item.quantity();
-                    int stockQuantity = product.getQuantity();
-
-                    if (stockQuantity <= 0){
-                        throw new ResponseStatusException(
-                                HttpStatus.BAD_REQUEST,
-                                "Product '" + product.getName() + "' is out of stock"
-                        );
-                    }
-
-                    if (orderedQuantity > stockQuantity){
-                        throw new ResponseStatusException(
-                                HttpStatus.BAD_REQUEST,
-                                "Product '" + product.getName() + "' only has " + stockQuantity + " units in stock. Please reduce the units in your order. We are sorry for the inconvenience, it will shortly be restocked"
-                        );
-                    }
-
-                    product.setQuantity(stockQuantity - orderedQuantity);
-                    productRepo.save(product);
-
-                    OrderProduct op = new OrderProduct();
-                    op.setOrder(order);
-                    op.setProduct(product);
-                    op.setQuantity(item.quantity());
-                    op.setUnitPrice(product.getPrice());
-                    return op;
-                })
+                .map(item -> processOrderProduct(order, item))
                 .toList();
 
         order.setItems(orderProducts);
@@ -90,8 +57,69 @@ public class OrderService {
 
         Order savedOrder = orderRepo.save(order);
         return mapToDto(savedOrder);
+    }
+
+    private Customer fetchCustomer(Long customerId){
+        return customerRepo.findById(customerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found with id " + customerId));
+    }
+
+    private Address fetchAddress(Long addressId){
+        return addressRepo.findById(addressId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not found"));
+    }
+
+    private OrderProduct processOrderProduct(Order order, OrderProductInputDto item){
+
+        Product product = productRepo.findByIdForUpdate(item.productId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Product not found with id" + item.productId()));
+
+        int stockQuantity = product.getQuantity();
+        int orderedQuantity = item.quantity();
+
+        if (stockQuantity <= 0){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Product '" + product.getName() + "' is out of stock"
+            );
+        }
+
+        if(orderedQuantity > stockQuantity ){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Product " + product.getName() + "only has " + stockQuantity + "kg in stock ");
+        }
+
+        int remaining = stockQuantity - orderedQuantity;
+
+        product.setQuantity(remaining);
+        updateProductStatus(product, remaining);
+        
+        OrderProduct op = new OrderProduct();
+        op.setOrder(order);
+        op.setProduct(product);
+        op.setQuantity(item.quantity());
+        op.setUnitPrice(product.getPrice());
+        return op;
 
     }
+
+    private void updateProductStatus(Product product, int remainingQuantity) {
+
+       ProductStatus newStatus;
+        if (remainingQuantity == 0){
+            newStatus = ProductStatus.OUT_OF_STOCK;
+        } else if (remainingQuantity <= LOW_STOCK_THRESHOLD){
+            newStatus = ProductStatus.PENDING_RESTOCK;
+        } else {
+            newStatus = ProductStatus.IN_STOCK;
+        }
+
+        if(product.getProductStatus() != newStatus){
+            product.setProductStatus(newStatus);
+        }
+    }
+
 
     public List<OrderOutputDto> findAllOrders(){
         return orderRepo.findAll().stream()

@@ -45,14 +45,14 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAllProducts());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> findProductById(@PathVariable long id){
-        return ResponseEntity.ok(productService.findProductById(id));
+    @GetMapping("/{productId}")
+    public ResponseEntity<Product> findProductById(@PathVariable long productId){
+        return ResponseEntity.ok(productService.findProductById(productId));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProductById(@PathVariable long id){
-        productService.deleteProductById(id);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<String> deleteProductById(@PathVariable long productId){
+        productService.deleteProductById(productId);
         return ResponseEntity.ok("Product deleted");
     }
 
