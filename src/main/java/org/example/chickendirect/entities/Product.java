@@ -1,5 +1,6 @@
 package org.example.chickendirect.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.example.chickendirect.enums.ProductStatus;
 import jakarta.persistence.*;
 
@@ -26,6 +27,7 @@ public class Product {
     private String unit;
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<OrderProduct> orderProduct;
 
     public Product(String name, String description, BigDecimal price, ProductStatus productStatus, int quantity, List<OrderProduct> orderProduct) {

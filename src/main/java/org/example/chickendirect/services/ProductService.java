@@ -2,6 +2,7 @@ package org.example.chickendirect.services;
 
 import org.example.chickendirect.dtos.ProductDto;
 import org.example.chickendirect.entities.Product;
+import org.example.chickendirect.enums.ProductStatus;
 import org.example.chickendirect.repos.ProductRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,14 @@ public class ProductService {
                 .toList();
     }
 
+    public Product updateProductStatus(String name, ProductStatus newStatus){
+        Product product = productRepo.findByName(name)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found: " + name));
+
+        product.setProductStatus(newStatus);
+        return productRepo.save(product);
+    }
+
     public Product updateProductPrice(String name, BigDecimal newPrice){
         Product product = productRepo.findByName(name)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found: " + name));
@@ -70,7 +79,4 @@ public class ProductService {
         productRepo.deleteById(id);
     }
 
-    public Product saveProduct(Product product){
-        return productRepo.save(product);
-    }
 }
