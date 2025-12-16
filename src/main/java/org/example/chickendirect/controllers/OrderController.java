@@ -2,6 +2,7 @@ package org.example.chickendirect.controllers;
 
 import org.example.chickendirect.dtos.OrderInputDto;
 import org.example.chickendirect.dtos.OrderOutputDto;
+import org.example.chickendirect.enums.OrderStatus;
 import org.example.chickendirect.services.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,14 @@ public class OrderController {
     public ResponseEntity<String> deleteOrderById(@PathVariable long orderId){
         orderService.deleteOrderById(orderId);
         return ResponseEntity.ok("Order deleted");
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<OrderOutputDto> updateOrderStatus(
+            @PathVariable long id,
+            @RequestParam OrderStatus status) {
+        OrderOutputDto updatedOrder = orderService.updateOrderStatus(id, status);
+        return ResponseEntity.ok(updatedOrder);
     }
 
 }

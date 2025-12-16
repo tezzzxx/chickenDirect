@@ -2,7 +2,7 @@ package org.example.chickendirect.controllers;
 
 import org.example.chickendirect.dtos.ProductDto;
 import org.example.chickendirect.dtos.UpdateProductPrice;
-import org.example.chickendirect.dtos.UpdateProductStatus;
+import org.example.chickendirect.dtos.UpdateProductQuantity;
 import org.example.chickendirect.entities.Product;
 import org.example.chickendirect.services.ProductService;
 import org.springframework.http.HttpStatus;
@@ -33,15 +33,6 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProducts);
     }
 
-    @PatchMapping("/{name}/status")
-    public Product updateProductStatus(
-            @PathVariable String name,
-            @RequestBody UpdateProductStatus request
-    ){
-        return productService.updateProductStatus(name, request.newStatus());
-    }
-
-
     @PatchMapping("/{name}/price")
     public Product updateProductPrice(
             @PathVariable String name,
@@ -50,19 +41,29 @@ public class ProductController {
         return productService.updateProductPrice(name, request.newPrice());
     }
 
+    @PatchMapping("/{id}/quantity")
+    public ResponseEntity<Product> updateProductQuantity(
+            @PathVariable long id,
+            @RequestBody UpdateProductQuantity request
+    ) {
+        Product updatedProduct = productService.updateProductQuantity(id, request.newQuantity());
+        return ResponseEntity.ok(updatedProduct);
+    }
+
+
     @GetMapping
     public ResponseEntity<List<Product>> findAllProducts(){
         return ResponseEntity.ok(productService.findAllProducts());
     }
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<Product> findProductById(@PathVariable long productId){
-        return ResponseEntity.ok(productService.findProductById(productId));
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> findProductById(@PathVariable long id){
+        return ResponseEntity.ok(productService.findProductById(id));
     }
 
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<String> deleteProductById(@PathVariable long productId){
-        productService.deleteProductById(productId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProductById(@PathVariable long id){
+        productService.deleteProductById(id);
         return ResponseEntity.ok("Product deleted");
     }
 

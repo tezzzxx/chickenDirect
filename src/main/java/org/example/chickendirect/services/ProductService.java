@@ -46,14 +46,6 @@ public class ProductService {
                 .toList();
     }
 
-    public Product updateProductStatus(String name, ProductStatus newStatus){
-        Product product = productRepo.findByName(name)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found: " + name));
-
-        product.setProductStatus(newStatus);
-        return productRepo.save(product);
-    }
-
     public Product updateProductPrice(String name, BigDecimal newPrice){
         Product product = productRepo.findByName(name)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found: " + name));
@@ -72,6 +64,24 @@ public class ProductService {
                         HttpStatus.NOT_FOUND, "Product not found with id " + id));
     }
 
+
+    public Product updateProductQuantity(long productId, int newQuantity) {
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
+                );
+
+        product.setQuantity(newQuantity);
+
+        if (newQuantity > 0) {
+            product.setProductStatus(ProductStatus.IN_STOCK);
+        } else {
+            product.setProductStatus(ProductStatus.OUT_OF_STOCK);
+        }
+
+        return productRepo.save(product);
+    }
+
     public void deleteProductById(long id){
         if (!productRepo.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with id " + id);
@@ -79,4 +89,7 @@ public class ProductService {
         productRepo.deleteById(id);
     }
 
+    public Product saveProduct(Product product){
+        return productRepo.save(product);
+    }
 }

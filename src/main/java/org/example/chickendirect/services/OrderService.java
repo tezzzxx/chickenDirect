@@ -121,6 +121,15 @@ public class OrderService {
     }
 
 
+    public OrderOutputDto updateOrderStatus(long orderId, OrderStatus newStatus){
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() ->new ResponseStatusException(HttpStatus.NOT_FOUND, "No order was found with this id"));
+
+        order.setOrderStatus(newStatus);
+        Order updatedOrder = orderRepo.save(order);
+        return mapToDto(updatedOrder);
+    }
+
     public List<OrderOutputDto> findAllOrders(){
         return orderRepo.findAll().stream()
                 .map(this::mapToDto)
