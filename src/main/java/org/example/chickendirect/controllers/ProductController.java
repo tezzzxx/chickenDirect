@@ -3,6 +3,7 @@ package org.example.chickendirect.controllers;
 import org.example.chickendirect.dtos.ProductDto;
 import org.example.chickendirect.dtos.UpdateProductPrice;
 import org.example.chickendirect.dtos.UpdateProductQuantity;
+import org.example.chickendirect.dtos.UpdateProductStatus;
 import org.example.chickendirect.entities.Product;
 import org.example.chickendirect.services.ProductService;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,14 @@ public class ProductController {
     public ResponseEntity<List<Product>> createProducts(@RequestBody List<ProductDto> productDtos){
         List<Product> createdProducts = productService.createProducts(productDtos);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProducts);
+    }
+
+    @PatchMapping("/{name}/status")
+    public Product updateProductStatus(
+            @PathVariable String name,
+            @RequestBody UpdateProductStatus request
+    ){
+        return productService.updateProductStatus(name, request.newStatus());
     }
 
     @PatchMapping("/{name}/price")

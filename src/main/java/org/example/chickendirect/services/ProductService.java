@@ -46,6 +46,14 @@ public class ProductService {
                 .toList();
     }
 
+    public Product updateProductStatus(String name, ProductStatus newStatus){
+        Product product = productRepo.findByName(name)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found: " + name));
+
+        product.setProductStatus(newStatus);
+        return productRepo.save(product);
+    }
+
     public Product updateProductPrice(String name, BigDecimal newPrice){
         Product product = productRepo.findByName(name)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found: " + name));
@@ -53,6 +61,7 @@ public class ProductService {
                 product.setPrice(newPrice);
                 return productRepo.save(product);
     }
+
 
     public List<Product> findAllProducts(){
         return productRepo.findAllByOrderByProductIdAsc();
