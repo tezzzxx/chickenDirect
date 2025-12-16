@@ -88,8 +88,4 @@ public class ProductService {
         }
         productRepo.deleteById(id);
     }
-
-    public Product saveProduct(Product product){
-        return productRepo.save(product);
-    }
 }
