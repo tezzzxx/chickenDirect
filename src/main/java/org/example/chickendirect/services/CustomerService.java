@@ -29,10 +29,13 @@ public class CustomerService {
         this.addressRepo = addressRepo;}
 
     @Transactional
-    public Customer createCustomer(CustomerDto customerDto){
-        if(customerRepo.findByEmail(customerDto.email()).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Customer with this email already exists, please try again with a different email"
-            );
+    public Customer createCustomer(CustomerDto customerDto) {
+        log.info("Creating a new customer with email={}", customerDto.email());
+
+        if (customerRepo.findByEmail(customerDto.email()).isPresent()) {
+            log.warn("Customer with email={} already exists", customerDto.email());
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Customer with this email already exists, please try again with a different email");
         }
 
         Customer customer = new Customer();
@@ -42,56 +45,54 @@ public class CustomerService {
 
         attachAddresses(customer, customerDto.addressList());
 
-        return customerRepo.save(customer);
-
+        Customer savedCustomer = customerRepo.save(customer);
+        log.info("Customer with id={} and email={} created successfully", savedCustomer.getCustomerId(), savedCustomer.getEmail());
+        return savedCustomer;
     }
 
     @Transactional
-    public Customer updateCustomerById(Long customerId, CustomerDto customerDto){
+    public Customer updateCustomerById(Long customerId, CustomerDto customerDto) {
+        log.info("Updating customer with id={}", customerId);
 
         Customer customer = customerRepo.findById(customerId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found with id " + customerId)
-                );
+                .orElseThrow(() -> {
+                    log.warn("Customer with id={} not found", customerId);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found with id " + customerId);
+                });
 
         if (customerDto.email() != null &&
                 !customerDto.email().equalsIgnoreCase(customer.getEmail()) &&
                 customerRepo.existsByEmailIgnoreCase(customerDto.email())) {
 
+            log.warn("Email {} is already in use", customerDto.email());
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
 
-        if (customerDto.name() != null){
-            customer.setName(customerDto.name());
-        }
-        if (customerDto.phoneNumber() != null){
-            customer.setPhoneNumber(customerDto.phoneNumber());
-        }
-        if (customerDto.email() != null){
-            customer.setEmail(customerDto.email());
-        }
-        if (customerDto.addressList() != null){
-            attachAddresses(customer, customerDto.addressList());
-        }
+        if (customerDto.name() != null) customer.setName(customerDto.name());
+        if (customerDto.phoneNumber() != null) customer.setPhoneNumber(customerDto.phoneNumber());
+        if (customerDto.email() != null) customer.setEmail(customerDto.email());
+        if (customerDto.addressList() != null) attachAddresses(customer, customerDto.addressList());
 
-        return customerRepo.save(customer);
-
+        Customer updatedCustomer = customerRepo.save(customer);
+        log.info("Customer with id={} updated successfully", customerId);
+        return updatedCustomer;
     }
 
     private void attachAddresses(Customer customer, List<AddressDto> addressDtos) {
         if (addressDtos == null || addressDtos.isEmpty()) return;
 
-        if(customer.getAddressList() == null){
-            customer.setAddressList(new ArrayList<>());
-        }
+        if (customer.getAddressList() == null) customer.setAddressList(new ArrayList<>());
 
-        for (AddressDto dto : addressDtos){
+        for (AddressDto dto : addressDtos) {
             Address address;
 
-            if(dto.addressId() !=null){
+            if (dto.addressId() != null) {
                 address = addressRepo.findById(dto.addressId())
-                        .orElseThrow(() -> new ResponseStatusException(
-                                HttpStatus.NOT_FOUND, "Address not found with id" + dto.addressId()
-                        ));
+                        .orElseThrow(() -> {
+                            log.warn("Address with id={} not found", dto.addressId());
+                            return new ResponseStatusException(
+                                    HttpStatus.NOT_FOUND, "Address not found with id " + dto.addressId());
+                        });
 
                 if (dto.apartmentNumber() != null) address.setApartmentNumber(dto.apartmentNumber());
                 if (dto.address() != null) address.setAddress(dto.address());
@@ -99,7 +100,7 @@ public class CustomerService {
                 if (dto.city() != null) address.setCity(dto.city());
                 if (dto.country() != null) address.setCountry(dto.country());
 
-            }else {
+            } else {
                 address = new Address();
                 address.setApartmentNumber(dto.apartmentNumber());
                 address.setAddress(dto.address());
@@ -107,32 +108,26 @@ public class CustomerService {
                 address.setCity(dto.city());
                 address.setCountry(dto.country());
                 address = addressRepo.save(address);
+                log.info("New address created with id={}", address.getAddressId());
             }
 
-            linkCustomerAndAddress(customer,address);
-            }
-        }
-
-    private void linkCustomerAndAddress(Customer customer, Address address) {
-
-        if(address.getCustomerList() == null){
-            address.setCustomerList(new ArrayList<>());
-        }
-        if(!address.getCustomerList().contains(customer)){
-            address.getCustomerList().add(customer);
-        }
-
-        if(customer.getAddressList() == null){
-            customer.setAddressList(new ArrayList<>());
-        }
-        if(!customer.getAddressList().contains(address)){
-            customer.getAddressList().add(address);
+            linkCustomerAndAddress(customer, address);
         }
     }
 
+    private void linkCustomerAndAddress(Customer customer, Address address) {
+        if (address.getCustomerList() == null) address.setCustomerList(new ArrayList<>());
+        if (!address.getCustomerList().contains(customer)) address.getCustomerList().add(customer);
 
-    public List<Customer> findAllCustomers(){
-        return customerRepo.findAll();
+        if (customer.getAddressList() == null) customer.setAddressList(new ArrayList<>());
+        if (!customer.getAddressList().contains(address)) customer.getAddressList().add(address);
+    }
+
+    public List<Customer> findAllCustomers() {
+        log.info("Fetching all customers");
+        List<Customer> customers = customerRepo.findAll();
+        log.info("Fetched {} customers", customers.size());
+        return customers;
     }
 
     public Customer findCustomerById(long id) {
@@ -146,26 +141,35 @@ public class CustomerService {
                 });
     }
 
+    public void deleteCustomerById(long id) {
+        log.info("Deleting customer with id={}", id);
 
-    public void deleteCustomerById(long id){
         if (!customerRepo.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found with id " + id + "delete not completed");
+            log.warn("Customer with id={} not found, delete not completed", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Customer not found with id " + id + " delete not completed");
         }
+
         customerRepo.deleteById(id);
+        log.info("Customer with id={} deleted successfully", id);
     }
 
-    public List<Customer> saveAllCustomers(List<Customer> customers){
-        if (customers == null || customers.isEmpty()) {
-            return  List.of();
-        }
+    public List<Customer> saveAllCustomers(List<Customer> customers) {
+        log.info("Saving list of customers, total received={}", customers == null ? 0 : customers.size());
+
+        if (customers == null || customers.isEmpty()) return List.of();
 
         List<Customer> validCustomers = customers.stream()
                 .filter(Objects::nonNull)
                 .toList();
 
-        if (validCustomers.isEmpty()){
+        if (validCustomers.isEmpty()) {
+            log.warn("No valid customers to save");
             return List.of();
         }
-        return customerRepo.saveAll(validCustomers);
+
+        List<Customer> savedCustomers = customerRepo.saveAll(validCustomers);
+        log.info("Saved {} customers successfully", savedCustomers.size());
+        return savedCustomers;
     }
 }
