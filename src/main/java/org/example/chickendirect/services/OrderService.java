@@ -26,7 +26,12 @@ public class OrderService {
     private static final BigDecimal FREE_SHIPPING_LIMIT = new BigDecimal("600");
     private static final BigDecimal STANDARD_SHIPPING = new BigDecimal("150");
 
-    private static final int LOW_STOCK_THRESHOLD = 10;
+    public static final int LOW_STOCK_THRESHOLD = 10;
+
+    public static int getLowStockThreshold() {
+        return LOW_STOCK_THRESHOLD;
+    }
+
 
     public OrderService(OrderRepo orderRepo, CustomerRepo customerRepo, AddressRepo addressRepo, ProductRepo productRepo) {
         this.orderRepo = orderRepo;
