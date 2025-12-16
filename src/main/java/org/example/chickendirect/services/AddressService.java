@@ -5,6 +5,7 @@ import org.example.chickendirect.entities.Address;
 import org.example.chickendirect.entities.Customer;
 import org.example.chickendirect.repos.AddressRepo;
 import org.example.chickendirect.repos.CustomerRepo;
+import org.example.chickendirect.repos.OrderRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +18,12 @@ public class AddressService {
 
     private final AddressRepo addressRepo;
     private final CustomerRepo customerRepo;
+    private final OrderRepo orderRepo;
 
-    public AddressService(AddressRepo addressRepo, CustomerRepo customerRepo) {
+    public AddressService(AddressRepo addressRepo, CustomerRepo customerRepo, OrderRepo orderRepo) {
         this.addressRepo = addressRepo;
         this.customerRepo = customerRepo;
+        this.orderRepo = orderRepo;
     }
 
     @Transactional
@@ -82,8 +85,20 @@ public class AddressService {
                         HttpStatus.NOT_FOUND, "Address not found with id " + id));
     }
 
-
+    @Transactional
     public void deleteAddressById(Long id){
-        addressRepo.deleteById(id);
+
+        Address address = addressRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Address not found with id " + id));
+
+        if (orderRepo.existsByAddress_AddressId(id)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Address with id " + id + " is used in existing orders and can not be deleted");
+        }
+
+        for (Customer customer : address.getCustomerList()) {
+            customer.getAddressList().remove(address);
+        }
+        addressRepo.delete(address);
     }
 }

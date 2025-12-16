@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface OrderRepo extends JpaRepository<Order, Long> {
     Optional<Order> findByOrderIdAndCustomerEmail(long orderId, String email);
+
+    boolean existsByAddress_AddressId(Long addressId);
 }
