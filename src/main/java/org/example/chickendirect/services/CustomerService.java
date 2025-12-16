@@ -6,6 +6,8 @@ import org.example.chickendirect.entities.Address;
 import org.example.chickendirect.entities.Customer;
 import org.example.chickendirect.repos.AddressRepo;
 import org.example.chickendirect.repos.CustomerRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import java.util.Objects;
 @Service
 public class CustomerService {
 
+    private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
     private final CustomerRepo customerRepo;
     private final AddressRepo addressRepo;
 
@@ -132,10 +135,15 @@ public class CustomerService {
         return customerRepo.findAll();
     }
 
-    public Customer findCustomerById(long id){
+    public Customer findCustomerById(long id) {
+        log.info("Fetching customer with id={}", id);
+
         return customerRepo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Customer not found with id " + id));
+                .orElseThrow(() -> {
+                    log.warn("Customer not found with id={}", id);
+                    return new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Customer not found with id " + id);
+                });
     }
 
 
