@@ -143,6 +143,28 @@ public class OrderService {
         return mapToDto(order);
     }
 
+    public List<OrderOutputDto> findOrderByCustomerId(long customerId){
+        if (!customerRepo.existsById(customerId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Customer not found with id " + customerId
+            );
+        }
+
+        List<Order> orders = orderRepo.findByCustomerCustomerId(customerId);
+
+        if (orders.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "No orders found for customer with id " + customerId
+            );
+        }
+
+        return orders.stream()
+                .map(this::mapToDto)
+                .toList();
+    }
+
     public void deleteOrderById(long id){
         if (!orderRepo.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found with id " + id);

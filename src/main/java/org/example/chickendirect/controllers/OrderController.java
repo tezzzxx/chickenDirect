@@ -50,4 +50,13 @@ public class OrderController {
         return ResponseEntity.ok(updatedOrder);
     }
 
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<OrderOutputDto>> findOrdersByCustomerId(
+            @PathVariable long customerId) {
+
+        return ResponseEntity.ok(
+                orderService.findOrderByCustomerId(customerId)
+        );
+    }
+
 }
