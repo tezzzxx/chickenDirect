@@ -57,7 +57,10 @@ public class CustomerService {
         Customer customer = customerRepo.findById(customerId)
                 .orElseThrow(() -> {
                     log.warn("Customer with id={} not found", customerId);
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found with id " + customerId);
+                    return new ResponseStatusException(
+                            HttpStatus.NOT_FOUND,
+                            "Customer not found with id " + customerId
+                    );
                 });
 
         if (customerDto.email() != null &&
@@ -68,10 +71,21 @@ public class CustomerService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
 
-        if (customerDto.name() != null) customer.setName(customerDto.name());
-        if (customerDto.phoneNumber() != null) customer.setPhoneNumber(customerDto.phoneNumber());
-        if (customerDto.email() != null) customer.setEmail(customerDto.email());
-        if (customerDto.addressList() != null) attachAddresses(customer, customerDto.addressList());
+        if (customerDto.name() != null && !customerDto.name().isBlank()) {
+            customer.setName(customerDto.name());
+        }
+
+        if (customerDto.phoneNumber() != null && !customerDto.phoneNumber().isBlank()) {
+            customer.setPhoneNumber(customerDto.phoneNumber());
+        }
+
+        if (customerDto.email() != null && !customerDto.email().isBlank()) {
+            customer.setEmail(customerDto.email());
+        }
+
+        if (customerDto.addressList() != null && !customerDto.addressList().isEmpty()) {
+            attachAddresses(customer, customerDto.addressList());
+        }
 
         Customer updatedCustomer = customerRepo.save(customer);
         log.info("Customer with id={} updated successfully", customerId);
@@ -158,6 +172,37 @@ public class CustomerService {
         log.info("Saving list of customers, total received={}", customers == null ? 0 : customers.size());
 
         if (customers == null || customers.isEmpty()) return List.of();
+
+        if (customers.stream().anyMatch(c ->
+                c == null ||
+                        c.getName() == null || c.getName().isBlank() ||
+                        c.getEmail() == null || c.getEmail().isBlank() ||
+                        c.getPhoneNumber() == null || c.getPhoneNumber().isBlank()
+        )) {
+            log.warn("One or more customers have missing or empty required fields and will not be saved");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Customer contains empty required fields"
+            );
+        }
+
+        for (Customer customer : customers) {
+            if (customerRepo.existsByEmailIgnoreCase(customer.getEmail())) {
+                log.warn("Customer email '{}' already exists in database and will not be saved", customer.getEmail());
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Customer email '" + customer.getEmail() + "' already exists"
+                );
+            }
+
+            if (customerRepo.existsByPhoneNumber(customer.getPhoneNumber())) {
+                log.warn("Customer phone number '{}' already exists in database and will not be saved", customer.getPhoneNumber());
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Customer phone number '" + customer.getPhoneNumber() + "' already exists"
+                );
+            }
+        }
 
         List<Customer> validCustomers = customers.stream()
                 .filter(Objects::nonNull)

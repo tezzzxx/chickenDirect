@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/orderProduct")
 public class OrderProductController {
 
-    private static final Logger log = LoggerFactory.getLogger(CustomerController.class);
+    private static final Logger log = LoggerFactory.getLogger(OrderProductController.class);
     private final OrderProductService orderProductService;
 
     public OrderProductController(OrderProductService orderProductService, OrderRepo orderRepo) {
