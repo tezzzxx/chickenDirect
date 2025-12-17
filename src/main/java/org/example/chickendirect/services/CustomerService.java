@@ -6,6 +6,7 @@ import org.example.chickendirect.entities.Address;
 import org.example.chickendirect.entities.Customer;
 import org.example.chickendirect.repos.AddressRepo;
 import org.example.chickendirect.repos.CustomerRepo;
+import org.example.chickendirect.repos.OrderRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,10 +24,13 @@ public class CustomerService {
     private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
     private final CustomerRepo customerRepo;
     private final AddressRepo addressRepo;
+    private final OrderRepo orderRepo;
 
-    public CustomerService(CustomerRepo customerRepo, AddressRepo addressRepo) {
+    public CustomerService(CustomerRepo customerRepo, AddressRepo addressRepo, OrderRepo orderRepo) {
         this.customerRepo = customerRepo;
-        this.addressRepo = addressRepo;}
+        this.addressRepo = addressRepo;
+        this.orderRepo = orderRepo;
+    }
 
     @Transactional
     public Customer createCustomer(CustomerDto customerDto) {
@@ -162,6 +166,12 @@ public class CustomerService {
             log.warn("Customer with id={} not found, delete not completed", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Customer not found with id " + id + " delete not completed");
+        }
+
+        boolean hasOrders = orderRepo.existsByCustomerId(id);
+        if(hasOrders){
+            log.warn("Customer with id={} has existing orders, delete not allowed", id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not delete customer with existing orders.");
         }
 
         customerRepo.deleteById(id);

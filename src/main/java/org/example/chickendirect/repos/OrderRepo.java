@@ -9,7 +9,12 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepo extends JpaRepository<Order, Long> {
+
     Optional<Order> findByOrderIdAndCustomerEmail(long orderId, String email);
+
     List<Order> findByCustomerCustomerId(Long customerId);
+
     boolean existsByAddress_AddressId(Long addressId);
+
+    boolean existsByCustomerId(Long customerId);
 }
