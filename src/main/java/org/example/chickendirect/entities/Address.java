@@ -43,6 +43,13 @@ public class Address {
         this.country = country;
     }
 
+    public Address(String apartmentNumber, String address, String zipCode, String city) {
+        this.apartmentNumber = apartmentNumber;
+        this.address = address;
+        this.zipCode = zipCode;
+        this.city = city;
+    }
+
     public Address() {
     }
 

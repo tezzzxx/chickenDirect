@@ -15,7 +15,6 @@ import java.util.Optional;
 public interface ProductRepo extends JpaRepository<Product, Long> {
 
     Optional<Product> findByName(String name);
-    List<Product> findAllByOrderByProductIdAsc();
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT p FROM Product p WHERE p.productId = :id")
