@@ -128,7 +128,7 @@ public class OrderService {
         return op;
     }
 
-    private void updateProductStatus(Product product, int remainingQuantity) {
+    void updateProductStatus(Product product, int remainingQuantity) {
         ProductStatus newStatus;
         if (remainingQuantity == 0){
             newStatus = ProductStatus.OUT_OF_STOCK;
