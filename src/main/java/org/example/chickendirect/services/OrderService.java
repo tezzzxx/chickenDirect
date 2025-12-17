@@ -116,7 +116,7 @@ public class OrderService {
 
         int remaining = stockQuantity - orderedQuantity;
         product.setQuantity(remaining);
-        updateProductStatus(product, remaining);
+        updateProductStatusByQuantity(product, remaining);
 
         log.info("Product '{}' stock updated. Remaining quantity: {}", product.getName(), remaining);
 
@@ -128,7 +128,7 @@ public class OrderService {
         return op;
     }
 
-    void updateProductStatus(Product product, int remainingQuantity) {
+    public void updateProductStatusByQuantity(Product product, int remainingQuantity) {
         ProductStatus newStatus;
         if (remainingQuantity == 0){
             newStatus = ProductStatus.OUT_OF_STOCK;

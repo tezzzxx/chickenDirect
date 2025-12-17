@@ -88,7 +88,7 @@ public class OrderProductService {
 
         product.setQuantity(product.getQuantity() - updatedQuantity);
         orderProduct.setQuantity(newQuantity);
-        orderService.updateProductStatus(product, product.getQuantity());
+        orderService.updateProductStatusByQuantity(product, product.getQuantity());
         log.info("Updated quantity for productName={} to newQuantity={}", productName, newQuantity);
 
         productRepo.save(product);
@@ -156,7 +156,7 @@ public class OrderProductService {
 
         product.setQuantity(product.getQuantity() - quantity);
         productRepo.save(product);
-        orderService.updateProductStatus(product, product.getQuantity());
+        orderService.updateProductStatusByQuantity(product, product.getQuantity());
         orderProductRepo.save(newOrderProduct);
 
         order.getItems().add(newOrderProduct);
@@ -252,7 +252,7 @@ public class OrderProductService {
         Product product = orderProduct.getProduct();
         product.setQuantity(product.getQuantity() + orderProduct.getQuantity());
         productRepo.save(product);
-        orderService.updateProductStatus(product, product.getQuantity());
+        orderService.updateProductStatusByQuantity(product, product.getQuantity());
         log.info("Restored {} units to productId={} stock", orderProduct.getQuantity(), productId);
 
         order.getItems().remove(orderProduct);

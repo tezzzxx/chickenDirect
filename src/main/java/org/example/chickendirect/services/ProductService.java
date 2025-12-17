@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import static org.example.chickendirect.services.OrderService.LOW_STOCK_THRESHOLD;
+
 @Service
 public class ProductService {
 
@@ -37,13 +39,21 @@ public class ProductService {
         newProduct.setName(productDto.name());
         newProduct.setDescription(productDto.description());
         newProduct.setPrice(productDto.price());
-        newProduct.setProductStatus(productDto.productStatus());
         newProduct.setQuantity(productDto.quantity());
         newProduct.setUnit(productDto.unit());
 
-        Product savdProduct = productRepo.save(newProduct);
-        log.info("Product '{}' created successfully with id={}", newProduct.getName(), newProduct.getProductId());
-        return savdProduct;
+        ProductStatus status = determineStatusByQuantity(productDto.quantity());
+        newProduct.setProductStatus(status);
+
+        Product savedProduct = productRepo.save(newProduct);
+        log.info("Product '{}' created successfully with id={}", savedProduct.getName(), savedProduct.getProductId());
+        return savedProduct;
+    }
+
+    private ProductStatus determineStatusByQuantity(int quantity) {
+        if (quantity == 0) return ProductStatus.OUT_OF_STOCK;
+        if (quantity <= LOW_STOCK_THRESHOLD) return ProductStatus.PENDING_RESTOCK;
+        return ProductStatus.IN_STOCK;
     }
 
     public List<Product> createProducts(List<ProductDto> productDtos) {
