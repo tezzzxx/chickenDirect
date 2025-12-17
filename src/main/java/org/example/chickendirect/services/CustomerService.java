@@ -168,7 +168,7 @@ public class CustomerService {
                     "Customer not found with id " + id + " delete not completed");
         }
 
-        boolean hasOrders = orderRepo.existsByCustomerId(id);
+        boolean hasOrders = orderRepo.existsByCustomer_CustomerId(id);
         if(hasOrders){
             log.warn("Customer with id={} has existing orders, delete not allowed", id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not delete customer with existing orders.");

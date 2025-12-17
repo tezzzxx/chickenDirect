@@ -16,5 +16,5 @@ public interface OrderRepo extends JpaRepository<Order, Long> {
 
     boolean existsByAddress_AddressId(Long addressId);
 
-    boolean existsByCustomerId(Long customerId);
+    boolean existsByCustomer_CustomerId(Long customerId);
 }
