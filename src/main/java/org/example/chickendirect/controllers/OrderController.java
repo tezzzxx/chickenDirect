@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api/order")
 public class OrderController {
 
-    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
 
     private final OrderService orderService;
 
@@ -26,25 +26,41 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderOutputDto> createOrder(@RequestBody OrderInputDto input){
-        logger.info("Received request to create order: {}", input);
+        log.info("Received request to create order: {}", input);
+
         OrderOutputDto order = orderService.createOrder(input);
-        logger.info("Order created successfully with id: {}", order.orderId());
+        log.info("Order created successfully with id: {}", order.orderId());
+
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<OrderOutputDto>> findAllOrders(){
-        return ResponseEntity.ok(orderService.findAllOrders());
+        log.info("Received request to fetch all orders");
+
+        List<OrderOutputDto> orders = orderService.findAllOrders();
+        log.info("Returning {} orders", orders.size());
+
+        return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderOutputDto> findOrderById(@PathVariable long orderId){
-        return ResponseEntity.ok(orderService.findOrderById(orderId));
+        log.info("Received request to fetch order with id {}", orderId);
+
+        OrderOutputDto order = orderService.findOrderById(orderId);
+        log.info("Order with id {} fetched successfully", orderId);
+
+        return ResponseEntity.ok(order);
     }
 
     @DeleteMapping("/{orderId}")
     public ResponseEntity<String> deleteOrderById(@PathVariable long orderId){
+        log.info("Received request to delete order with id {}", orderId);
+
         orderService.deleteOrderById(orderId);
+        log.info("Order with id {} deleted successfully", orderId);
+
         return ResponseEntity.ok("Order deleted");
     }
 
@@ -52,17 +68,23 @@ public class OrderController {
     public ResponseEntity<OrderOutputDto> updateOrderStatus(
             @PathVariable long id,
             @RequestParam OrderStatus status) {
+        log.info("Received request to update status of order {} to {}", id, status);
+
         OrderOutputDto updatedOrder = orderService.updateOrderStatus(id, status);
+        log.info("Order {} status updated successfully to {}", id, status);
+
         return ResponseEntity.ok(updatedOrder);
     }
 
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<OrderOutputDto>> findOrdersByCustomerId(
             @PathVariable long customerId) {
+        log.info("Received request to fetch orders for customer with id {}", customerId);
 
-        return ResponseEntity.ok(
-                orderService.findOrderByCustomerId(customerId)
-        );
+        List<OrderOutputDto> orders = orderService.findOrderByCustomerId(customerId);
+        log.info("Returning {} orders for customer with id {}", orders.size(), customerId);
+
+        return ResponseEntity.ok(orders);
     }
 
 }
