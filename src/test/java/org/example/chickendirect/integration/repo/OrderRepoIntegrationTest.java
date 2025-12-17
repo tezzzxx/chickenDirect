@@ -10,6 +10,7 @@ import org.example.chickendirect.repos.CustomerRepo;
 import org.example.chickendirect.repos.OrderRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("integration-test")
 public class OrderRepoIntegrationTest extends BaseIntegrationTest {
 
     @Autowired

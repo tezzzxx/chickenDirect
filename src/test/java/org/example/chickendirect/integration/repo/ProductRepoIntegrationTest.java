@@ -6,13 +6,14 @@ import org.example.chickendirect.enums.ProductStatus;
 import org.example.chickendirect.repos.ProductRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-
+@ActiveProfiles("integration-test")
 public class ProductRepoIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
