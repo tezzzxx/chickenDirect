@@ -178,6 +178,23 @@ public class OrderService {
     }
 
     private OrderOutputDto mapToDto(Order order){
+
+        CustomerOutputDto customerDto = new CustomerOutputDto(
+                order.getCustomer().getCustomerId(),
+                order.getCustomer().getName(),
+                order.getCustomer().getPhoneNumber(),
+                order.getCustomer().getEmail()
+        );
+
+        AddressOutputDto addressDto = new AddressOutputDto(
+                order.getAddress().getAddressId(),
+                order.getAddress().getApartmentNumber(),
+                order.getAddress().getAddress(),
+                order.getAddress().getZipCode(),
+                order.getAddress().getCity(),
+                order.getAddress().getCountry()
+        );
+
         List<OrderProductOutputDto> items = order.getItems().stream()
                 .map(op -> new OrderProductOutputDto(
                         op.getOrderProductId(),
@@ -191,8 +208,8 @@ public class OrderService {
 
         return new OrderOutputDto(
                 order.getOrderId(),
-                order.getCustomer().getCustomerId(),
-                order.getAddress().getAddressId(),
+                customerDto,
+                addressDto,
                 order.getDate(),
                 order.getTotalSum(),
                 order.getShippingCharge(),
