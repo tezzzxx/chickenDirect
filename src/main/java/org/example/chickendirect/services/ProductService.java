@@ -119,7 +119,7 @@ public class ProductService {
     public List<Product> findAllProducts(){
         log.info("Fetching all products");
 
-        List<Product> products = productRepo.findAllByOrderByProductIdAsc();
+        List<Product> products = productRepo.findAll();
 
         if(products.isEmpty()){
             log.warn("No products found in the database");

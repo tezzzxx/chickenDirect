@@ -28,13 +28,26 @@ public class ProductRepoIntegrationTest extends BaseIntegrationTest {
         Optional<Product> found = productRepo.findByName("Chicken BA");
 
         assertThat(found).isPresent();
-        assertThat(found.get().getName()).isEqualTo("Chicken BA");
+        Product productP = found.orElseThrow();
+        assertThat(productP.getName()).isEqualTo("Chicken BA");
     }
 
     @Test
-    void findAllOrderedByIdAsc(){
-        Product p1 = new Product("Chicken A", BigDecimal.valueOf(3.99), "kg", ProductStatus.IN_STOCK);
-        Product p2 = new Product("Chicken B", BigDecimal.valueOf(4.99), "kg", ProductStatus.IN_STOCK);
+    void testFindByNameNotExists(){
+        Optional<Product> found = productRepo.findByName("doesntexist");
+        assertThat(found).isNotPresent();
+    }
+
+    @Test
+    void testFindByIdForUpdate(){
+        Product product = new Product("Chicken Burger", "Test", BigDecimal.valueOf(69.99), ProductStatus.IN_STOCK, 10, "kg");
+        productRepo.save(product);
+
+        Optional<Product> lockedProduct = productRepo.findByIdForUpdate(product.getProductId());
+
+        assertThat(lockedProduct).isPresent();
+        Product productpp = lockedProduct.orElseThrow();
+        assertThat(productpp.getName()).isEqualTo("Chicken Burger");
     }
 
 }
