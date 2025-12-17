@@ -8,8 +8,8 @@ import java.util.List;
 
 public record OrderOutputDto(
         long orderId,
-        long customerId,
-        long addressId,
+        CustomerOutputDto customer,
+        AddressOutputDto address,
         LocalDate date,
         BigDecimal totalSum,
         BigDecimal shippingCharge,

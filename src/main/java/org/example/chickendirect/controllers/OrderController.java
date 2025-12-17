@@ -4,6 +4,8 @@ import org.example.chickendirect.dtos.OrderInputDto;
 import org.example.chickendirect.dtos.OrderOutputDto;
 import org.example.chickendirect.enums.OrderStatus;
 import org.example.chickendirect.services.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,8 @@ import java.util.List;
 @RequestMapping("/api/order")
 public class OrderController {
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+
     private final OrderService orderService;
 
     public OrderController(OrderService orderService) {
@@ -22,7 +26,9 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderOutputDto> createOrder(@RequestBody OrderInputDto input){
+        logger.info("Received request to create order: {}", input);
         OrderOutputDto order = orderService.createOrder(input);
+        logger.info("Order created successfully with id: {}", order.orderId());
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
