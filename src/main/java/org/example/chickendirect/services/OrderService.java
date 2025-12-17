@@ -203,13 +203,32 @@ public class OrderService {
                 .toList();
     }
 
+    @Transactional
     public void deleteOrderById(long id){
         log.info("Deleting order with id: {}", id);
-        if (!orderRepo.existsById(id)) {
-            log.warn("Order not found with id: {}", id);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found with id " + id);
+
+        Order order = orderRepo.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Order not found with id: {}", id);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found with id " + id);
+                });
+
+        if(order.getOrderStatus() != OrderStatus.CONFIRMED){
+            log.warn("Cannot delete order with status: {}", order.getOrderStatus());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Only CONFIRMED orders can be deleted");
         }
-        orderRepo.deleteById(id);
+
+        for(OrderProduct op : order.getItems()){
+            Product product = op.getProduct();
+            int restoredQuantity = product.getQuantity() + op.getQuantity();
+            product.setQuantity(restoredQuantity);
+            updateProductStatusByQuantity(product, restoredQuantity);
+            productRepo.save(product);
+            log.info("Restored {} units to product '{}'. New quantity: {}", op.getQuantity(), product.getName(), restoredQuantity);
+        }
+
+        orderRepo.delete(order);
         log.info("Order with id: {} deleted successfully", id);
     }
 
