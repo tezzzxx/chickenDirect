@@ -21,10 +21,10 @@ public class Product {
     private BigDecimal price;
     @Enumerated(EnumType.STRING)
     @Column(name = "product_status", nullable = false)
-    private ProductStatus productStatus;
+    private ProductStatus productStatus = ProductStatus.IN_STOCK;
     private int quantity;
     @Column(nullable = false)
-    private String unit;
+    private String unit = "kg";
 
     @OneToMany(mappedBy = "product")
     @JsonIgnore
