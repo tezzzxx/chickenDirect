@@ -239,7 +239,6 @@ public class ProductServiceUnitTest {
                     () -> productService.updateProductPrice("Chicken", BigDecimal.TEN)
             );
             assertEquals(404, ex.getStatusCode().value());
-
         }
     }
 
