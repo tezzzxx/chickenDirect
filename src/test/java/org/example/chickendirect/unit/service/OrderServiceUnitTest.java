@@ -77,7 +77,7 @@ public class OrderServiceUnitTest {
             when(customerRepo.findById(1L)).thenReturn(Optional.of(customer));
             when(addressRepo.findById(1L)).thenReturn(Optional.of(address));
             when(productRepo.findByIdForUpdate(1L)).thenReturn(Optional.of(product));
-            when(orderRepo.<Order>save(Mockito.any(Order.class)))
+            when(orderRepo.save(Mockito.any(Order.class)))
                     .thenAnswer(invocation -> invocation.getArgument(0));
 
             OrderOutputDto result = orderService.createOrder(input);
@@ -175,7 +175,8 @@ public class OrderServiceUnitTest {
             when(customerRepo.findById(anyLong())).thenReturn(Optional.of(new Customer()));
             when(addressRepo.findById(anyLong())).thenReturn(Optional.of(new Address()));
             when(productRepo.findByIdForUpdate(anyLong())).thenReturn(Optional.of(product));
-            when(orderRepo.<Order>save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+            when(orderRepo.save(any(Order.class)))
+                    .thenAnswer(invocation -> invocation.getArgument(0));
 
             var input = new OrderInputDto(1L, 1L, List.of(new OrderProductInputDto(1L, 1)));
             var result = orderService.createOrder(input);
@@ -236,7 +237,8 @@ public class OrderServiceUnitTest {
             order.setAddress(address);
 
             when(orderRepo.findById(1L)).thenReturn(Optional.of(order));
-            when(orderRepo.<Order>save(any(Order.class))).thenAnswer(inv -> inv.getArgument(0));
+            when(orderRepo.save(any(Order.class)))
+                    .thenAnswer(inv -> inv.getArgument(0));
 
             var result = orderService.updateOrderStatus(1L, OrderStatus.DELIVERED);
             assertEquals(OrderStatus.DELIVERED, result.orderStatus());
@@ -353,7 +355,8 @@ public class OrderServiceUnitTest {
             order.setItems(List.of(op));
 
             when(orderRepo.findById(1L)).thenReturn(Optional.of(order));
-            when(productRepo.<Product>save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
+            when(productRepo.save(any(Product.class)))
+                    .thenAnswer(i -> i.getArgument(0));
 
             orderService.deleteOrderById(1L);
 
