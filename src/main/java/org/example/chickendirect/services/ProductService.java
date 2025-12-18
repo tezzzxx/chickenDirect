@@ -76,7 +76,7 @@ public class ProductService {
 
     public Product updateProductStatus(String name, ProductStatus newStatus){
         if(newStatus == null){
-            log.warn("Missing 'newStatus' is request");
+            log.warn("Missing 'newStatus' in request");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request must include 'newStatus'");
         }
 
