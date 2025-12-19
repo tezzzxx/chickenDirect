@@ -358,5 +358,4 @@ public class ProductServiceUnitTest {
             assertEquals(404, ex.getStatusCode().value());
         }
     }
-
 }
