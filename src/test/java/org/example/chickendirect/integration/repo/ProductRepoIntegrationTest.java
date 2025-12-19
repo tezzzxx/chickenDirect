@@ -33,7 +33,7 @@ public class ProductRepoIntegrationTest extends BaseIntegrationTest {
         assertThat(productP.getName()).isEqualTo("Chicken BA");
     }
 
-    /*
+
     @Test
     void testFindByNameNotExists(){
         Optional<Product> found = productRepo.findByName("doesntexist");
@@ -51,7 +51,6 @@ public class ProductRepoIntegrationTest extends BaseIntegrationTest {
         Product productpp = lockedProduct.orElseThrow();
         assertThat(productpp.getName()).isEqualTo("Chicken Burger");
     }
- */
 }
 
 

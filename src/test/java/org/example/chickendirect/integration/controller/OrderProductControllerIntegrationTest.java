@@ -12,14 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -54,21 +50,18 @@ public class OrderProductControllerIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setup() {
-        // Clean repositories
         orderProductRepo.deleteAll();
         orderRepo.deleteAll();
         customerRepo.deleteAll();
         addressRepo.deleteAll();
         productRepo.deleteAll();
 
-        // Create Customer
         customer = new Customer();
         customer.setName("Test Customer");
         customer.setEmail("test@example.com");
         customer.setPhoneNumber("12345678");
         customerRepo.save(customer);
 
-        // Create Address
         Address address = new Address();
         address.setApartmentNumber("1A");
         address.setAddress("Test Street");
@@ -77,7 +70,6 @@ public class OrderProductControllerIntegrationTest extends BaseIntegrationTest {
         address.setCountry("Norway");
         addressRepo.save(address);
 
-        // Create Order
         order = new Order();
         order.setCustomer(customer);
         order.setAddress(address);
@@ -87,14 +79,12 @@ public class OrderProductControllerIntegrationTest extends BaseIntegrationTest {
         order.setOrderStatus(OrderStatus.CONFIRMED);
         orderRepo.save(order);
 
-        // Create Product
         product = new Product();
         product.setName("Test Product");
         product.setPrice(BigDecimal.valueOf(100));
         product.setQuantity(100); // gi nok stock
         productRepo.save(product);
 
-        // Create OrderProduct
         orderProduct = new OrderProduct();
         orderProduct.setOrder(order);
         orderProduct.setProduct(product);
@@ -102,7 +92,6 @@ public class OrderProductControllerIntegrationTest extends BaseIntegrationTest {
         orderProduct.setUnitPrice(BigDecimal.valueOf(100));
         orderProductRepo.save(orderProduct);
 
-        // Flush to ensure DB sees all entities
         productRepo.flush();
         orderProductRepo.flush();
     }
@@ -153,33 +142,6 @@ public class OrderProductControllerIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.unitPrice").value(50))
                 .andExpect(jsonPath("$.totalPrice").value(200));
     }
-
-    /*
-    @Test
-    void deleteProductFromOrder_shouldRemoveProduct() throws Exception {
-        // Opprett nytt produkt
-        Product productToDelete = new Product();
-        productToDelete.setName("Product To Delete");
-        productToDelete.setPrice(BigDecimal.valueOf(50));
-        productToDelete.setQuantity(100);
-        productToDelete = productRepo.saveAndFlush(productToDelete); // <-- saveAndFlush gir ID
-
-        // Legg produktet til ordren
-        OrderProduct orderProductToDelete = new OrderProduct();
-        orderProductToDelete.setOrder(order); // bruk eksisterende ordre
-        orderProductToDelete.setProduct(productToDelete); // bruk persisted product
-        orderProductToDelete.setQuantity(2);
-        orderProductToDelete.setUnitPrice(BigDecimal.valueOf(50));
-        orderProductToDelete = orderProductRepo.saveAndFlush(orderProductToDelete); // <-- saveAndFlush gir ID
-
-        // Kall DELETE API med ID fra DB
-        mockMvc.perform(delete("/api/orderProduct/{orderId}/productDelete", order.getOrderId())
-                        .param("productId", String.valueOf(productToDelete.getProductId()))
-                        .param("email", customer.getEmail())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
-    }
-    */
 
     @Test
     void getAllOrderProducts_shouldReturnList() throws Exception {
